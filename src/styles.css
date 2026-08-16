@@ -1,3 +1,25 @@
-/* You can add global styles to this file, and also import other style files */
-
 @import 'tailwindcss';
+
+/* Semantic Layer: Light Theme (default) */
+:root {
+  --color-primary: 124 58 237;        /* #7C3AED */
+  --color-primary-light: 245 243 255; /* #F5F3FF */
+  --bg-page: 249 250 251;             /* #F9FAFB */
+  --surface: 255 255 255;             /* #FFFFFF */
+  --text-main: 31 41 55;              /* #1F2937 */
+  --text-secondary: 107 114 128;      /* #6B7280 */
+  --danger: 220 38 38;                /* #DC2626 */
+  --border: 229 231 235;              /* #E5E7EB */
+}
+
+/* DARK THEME: Same names, invert values */
+.dark {
+  --color-primary: 139 92 246;        /* #8B5CF6 (sube luminosidad) */
+  --color-primary-light: 139 92 246;  /* se usará con alpha bajo */
+  --bg-page: 15 17 21;                /* #0F1115 */
+  --surface: 26 29 36;               /* #1A1D24 */
+  --text-main: 243 244 246;           /* #F3F4F6 */
+  --text-secondary: 156 163 175;      /* #9CA3AF */
+  --danger: 248 113 113;              /* #F87171 */
+  --border: 42 46 56;                /* #2A2E38 */
+}
