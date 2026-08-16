@@ -24,13 +24,13 @@ El proyecto está diseñado bajo una arquitectura *Feature-Sliced* y orientada a
 Secuencia exacta de desarrollo. Utiliza estos checkboxes para trazar el progreso y garantizar que las dependencias entre módulos se respeten.
 
 ### Fase 0: Setup Core
-- [ ] `src/environments/environment.ts` (apiUrl local).
-- [ ] `src/environments/environment.prod.ts` (apiUrl prod).
-- [ ] `src/app/core/http/api-error-handler.service.ts` (Capa de normalización de errores).
-- [ ] `src/app/app.routes.ts` (Estructura base de enrutamiento).
-- [ ] `src/app/app.component.ts` (Root standalone con `<router-outlet />`).
-- [ ] `src/app/app.config.ts` (`provideRouter`, `provideHttpClient`).
-- [ ] `src/main.ts` (`bootstrapApplication`).
+- [x] `src/environments/environment.ts` (apiUrl prod).
+- [x] `src/environments/environment.development.ts` (apiUrl local).
+- [x] `src/app/core/errors/application/http/api-error-handler.service.ts` (Capa de normalización de errores).
+- [x] `src/app/app.routes.ts` (Estructura base de enrutamiento).
+- [x] `src/app/app.component.ts` (Root standalone con `<router-outlet />`).
+- [x] `src/app/app.config.ts` (`provideRouter`, `provideHttpClient`).
+- [x] `src/main.ts` (`bootstrapApplication`).
 
 ### Fase 1: Autenticación y Usuarios (Identity)
 - [ ] `features/users/models/user.model.ts` (Interfaces core).
@@ -104,13 +104,13 @@ Secuencia exacta de desarrollo. Utiliza estos checkboxes para trazar el progreso
 
 ```bash
 # 1. Instalación de dependencias
-npm install
+pnpm install
 
 # 2. Levantar entorno de desarrollo local (incluye validación zoneless)
-npm start
+pnpm start
 
 # 3. Ejecución de suite de tests unitarios
-npm run test
+pnpm run test
 
 # 4. Pruebas E2E (requiere levantar la app primero o configurar baseUrl en playwright.config.ts)
-npm run e2e
+pnpm run e2e
