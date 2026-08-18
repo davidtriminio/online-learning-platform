@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 
-import { ApiErrorHandlerService } from './api-error-handler-service';
+import { ApiErrorHandlerService } from './api-error-handler.service';
 
 describe('ApiErrorHandlerService', () => {
   let service: ApiErrorHandlerService;

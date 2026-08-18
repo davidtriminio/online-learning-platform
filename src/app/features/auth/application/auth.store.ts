@@ -1,6 +1,6 @@
 import { computed, inject, Injectable, signal } from '@angular/core'
 import { AuthRepository } from '../infrastructure/auth.repository'
-import { SessionStorageService } from '../infrastructure/session-storage-service'
+import { SessionStorageService } from '../infrastructure/session-storage.service'
 import { Router } from '@angular/router'
 import { AuthUser } from '../domain/auth-user.model';
 import { LoginRequestDto } from '../infrastructure/dto/login-request.dto';
@@ -27,6 +27,7 @@ export class AuthStore {
       next: ({user, token}) => {
         this.session.setToken(token)
         this._user.set(user)
+        this._status.set('idle')
         this.router.navigate(['/courses'])
       },
       error: () => this._status.set('error')
