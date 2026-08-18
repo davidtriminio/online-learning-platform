@@ -1,7 +1,8 @@
 import { Component, inject, signal } from '@angular/core'
 import { AuthStore } from '../../../application/auth.store'
-import { form, FormField, required } from '@angular/forms/signals'
+import { form, FormField } from '@angular/forms/signals'
 import { LucideArrowRight, LucideCircleAlert, LucideLoaderCircle, LucideLock, LucideSparkles, LucideUser } from '@lucide/angular'
+import { loginSchema } from '../../../application/auth.schema'
 
 @Component({
   selector: 'app-login',
@@ -21,10 +22,7 @@ export class LoginPage {
   protected readonly status = this.authStore.status
 
   protected readonly model = signal({ userName: '', password: '' })
-  protected readonly loginForm = form(this.model, (path) => {
-    required(path.userName, { message: 'Username is required.' })
-    required(path.password, { message: 'Password is required.' })
-  })
+  protected readonly loginForm = form(this.model, loginSchema)
 
   onSubmit(): void {
 
@@ -32,7 +30,7 @@ export class LoginPage {
     this.loginForm.userName().markAsTouched()
     this.loginForm.password().markAsTouched()
 
-    // formulario invalido se detiene ejecución
+    // formulario inválido se detiene ejecución
     if (this.loginForm().invalid()) return
 
     // proceder al inicio de sesión, si el formulario está bien
