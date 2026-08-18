@@ -13,7 +13,7 @@ export class AuthStore {
   private session = inject(SessionStorageService)
   private router = inject(Router)
 
-  private _user = signal<AuthUser | null>(null)
+  private _user = signal<AuthUser | null>(this.session.getUser())
   private _status = signal<Status>('idle')
 
   readonly user = this._user.asReadonly()
@@ -26,6 +26,7 @@ export class AuthStore {
     this.repo.login(credentials).subscribe({
       next: ({user, token}) => {
         this.session.setToken(token)
+        this.session.setUser(user)
         this._user.set(user)
         this._status.set('idle')
         this.router.navigate(['/courses'])
