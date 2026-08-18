@@ -1,6 +1,6 @@
 import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
-import { ApiErrorHandlerService } from '../errors/application/http/api-error-handler.service';
+import { ApiErrorHandlerService } from '../errors/infrastructure/http/api-error-handler.service';
 import { catchError, throwError } from 'rxjs';
 import { AppError } from '../errors/domain/app-error';
 
