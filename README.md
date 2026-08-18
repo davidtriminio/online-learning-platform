@@ -26,7 +26,7 @@ Secuencia exacta de desarrollo. Utiliza estos checkboxes para trazar el progreso
 ### Fase 0: Setup Core
 - [x] `src/environments/environment.ts` (apiUrl prod).
 - [x] `src/environments/environment.development.ts` (apiUrl local).
-- [x] `src/app/core/errors/application/http/api-error-handler.service.ts` (Capa de normalización de errores).
+- [x] `src/app/core/errors/infrastructure/http/api-error-handler.service.ts` (Capa de normalización de errores).
 - [x] `src/app/app.routes.ts` (Estructura base de enrutamiento).
 - [x] `src/app/app.component.ts` (Root standalone con `<router-outlet />`).
 - [x] `src/app/app.config.ts` (`provideRouter`, `provideHttpClient`).
