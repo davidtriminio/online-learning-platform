@@ -1,0 +1,165 @@
+<main class="mx-auto w-full max-w-5xl px-5 py-8 sm:px-8 lg:py-10">
+  <nav class="mb-6">
+    <a
+      routerLink="/courses"
+      class="inline-flex items-center gap-1.5 text-sm font-semibold text-text-secondary transition-colors hover:text-primary focus-visible:outline-none focus-visible:underline"
+    >
+      <svg lucideArrowLeft [size]="18" [strokeWidth]="2"></svg>
+      <span>Back to courses</span>
+    </a>
+  </nav>
+
+  <header class="mb-6 flex flex-wrap items-center justify-between gap-3">
+    <div>
+      <h1
+        class="text-2xl font-black tracking-tight text-text-main sm:text-3xl">{{ isEdit() ? 'Edit Course' : 'New course' }}</h1>
+      <p class="mt-1 text-sm text-text-secondary">Fill in the details to publish a course.</p>
+    </div>
+    <!--    @if (isEdit()) {-->
+    <!--      <span-->
+    <!--        class="inline-flex items-center gap-1.5 rounded-full border border-border bg-surface px-3 py-1 text-xs font-medium text-text-secondary"-->
+    <!--      >-->
+    <!--      <svg lucideHash [size]="14" [strokeWidth]="2"></svg>-->
+    <!--      <span>ID {{courseForm.}}</span>-->
+    <!--    </span>-->
+    <!--    }-->
+  </header>
+
+  <form class="grid grid-cols-1 gap-6 lg:grid-cols-[1.5fr_1fr]" novalidate
+        (submit)="$event.preventDefault(); onSubmit()">
+    <!-- Main fields -->
+    <section class="space-y-5 rounded-2xl border border-border bg-surface p-5 sm:p-6">
+      <div>
+        <label for="courseName" class="mb-1.5 block text-sm font-semibold text-text-main">
+          Course name
+        </label>
+        <input
+          id="courseName"
+          [formField]="courseForm.name"
+          type="text"
+          placeholder="e.g. Advanced Angular Architecture"
+          class="w-full rounded-xl border border-border bg-bg-page px-4 py-3 text-sm text-text-main placeholder:text-text-secondary transition-colors duration-200 focus:border-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/30"
+        />
+        @if (courseForm.name().touched() && courseForm.name().invalid()) {
+          <p id="name-error" class="mt-1.5 flex items-center gap-1.5 text-xs text-danger">
+            @for (error of courseForm.name().errors(); track error.kind) {
+              <svg lucideAlertCircle class="h-3.5 w-3.5"></svg>
+              {{ error.message }}
+            }
+          </p>
+        }
+      </div>
+
+      <div>
+        <label for="description" class="mb-1.5 block text-sm font-semibold text-text-main">
+          Description
+        </label>
+        <textarea
+          id="description"
+          [formField]="courseForm.description"
+          rows="5"
+          placeholder="What will students learn in this course?"
+          class="w-full resize-y rounded-xl border border-border bg-bg-page px-4 py-3 text-sm text-text-main placeholder:text-text-secondary transition-colors duration-200 focus:border-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/30"
+        ></textarea>
+        @if (courseForm.description().touched() && courseForm.description().invalid()) {
+          <p id="description-error" class="mt-1.5 flex items-center gap-1.5 text-xs text-danger">
+            @for (error of courseForm.description().errors(); track error.kind) {
+              <svg lucideAlertCircle class="h-3.5 w-3.5"></svg>
+              {{ error.message }}
+            }
+          </p>
+        }
+      </div>
+
+      <div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
+        <div>
+          <label for="totalHours" class="mb-1.5 block text-sm font-semibold text-text-main">
+            Total hours
+          </label>
+          <div class="relative">
+            <svg
+              lucideClock
+              [size]="18"
+              [strokeWidth]="1.5"
+              class="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-text-secondary"
+            ></svg>
+            <input
+              id="totalHours"
+              [formField]="courseForm.totalHours"
+              type="number"
+              placeholder="24"
+              class="w-full rounded-xl border border-border bg-bg-page py-3 pl-11 pr-4 text-sm text-text-main placeholder:text-text-secondary transition-colors duration-200 focus:border-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/30"
+            />
+            @if (courseForm.totalHours().touched() && courseForm.totalHours().invalid()) {
+              <p id="totalHours-error" class="mt-1.5 flex items-center gap-1.5 text-xs text-danger">
+                @for (error of courseForm.totalHours().errors(); track error.kind) {
+                  <svg lucideAlertCircle class="h-3.5 w-3.5"></svg>
+                  {{ error.message }}
+                }
+              </p>
+            }
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Thumbnail + actions -->
+    <aside class="space-y-5">
+      <section class="rounded-2xl border border-border bg-surface p-5 sm:p-6">
+        <h2 class="mb-3 text-sm font-semibold text-text-main">Thumbnail</h2>
+
+        <div class="overflow-hidden rounded-xl border border-border bg-primary-light">
+          <img
+            [src]="courseForm.thumbnailUrl().value() || 'assets/placeholder-course.jpg'"
+            [alt]="courseForm.name().value() || 'Course thumbnail Preview'"
+            class="aspect-video w-full object-cover"
+          />
+        </div>
+
+        <label for="thumbnailUrl" class="mb-1.5 mt-4 block text-sm font-semibold text-text-main">
+          Thumbnail URL
+        </label>
+        <div class="relative">
+          <svg
+            lucideImage
+            [size]="18"
+            [strokeWidth]="1.5"
+            class="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-text-secondary"
+          ></svg>
+          <input
+            id="thumbnailUrl"
+            [formField]="courseForm.thumbnailUrl"
+            type="url"
+            placeholder="https://…/cover.jpg"
+            class="w-full rounded-xl border border-border bg-bg-page py-3 pl-11 pr-4 text-sm text-text-main placeholder:text-text-secondary transition-colors duration-200 focus:border-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/30"
+          />
+          @if (courseForm.thumbnailUrl().touched() && courseForm.thumbnailUrl().invalid()) {
+            <p id="thumbnailUrl-error" class="mt-1.5 flex items-center gap-1.5 text-xs text-danger">
+              @for (error of courseForm.thumbnailUrl().errors(); track error.kind) {
+                <svg lucideAlertCircle class="h-3.5 w-3.5"></svg>
+                {{ error.message }}
+              }
+            </p>
+          }
+        </div>
+      </section>
+
+      <div class="flex flex-col gap-3">
+        <button
+          type="submit"
+          class="inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-4 py-3 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:shadow-md motion-safe:hover:scale-[1.01] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page"
+        >
+          <svg lucideCheck [size]="18" [strokeWidth]="2"></svg>
+          <span>Save course</span>
+        </button>
+
+        <a
+          routerLink="/courses"
+          class="inline-flex items-center justify-center gap-2 rounded-xl border border-border bg-surface px-4 py-3 text-sm font-semibold text-text-main shadow-sm transition-colors duration-200 hover:bg-primary-light hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page"
+        >
+          <span>Cancel</span>
+        </a>
+      </div>
+    </aside>
+  </form>
+</main>
