@@ -1,5 +1,5 @@
 export const COURSE_ENDPOINTS = {
-  getAll: 'GetAllCourses',
+  getAll: 'GetAllCourse',
   add: 'AddNewCourse',
   update: 'UpdateCourse',
   deleteById: 'DeleteCourseById'
