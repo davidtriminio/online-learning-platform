@@ -27,7 +27,12 @@
       @for (course of store.courses(); track course.id) {
         <app-course-card [course]="course" />
       } @empty {
-        <app-empty-state class="col-span-full block" title="No courses found" />
+        <app-empty-state
+          title="No courses found."
+          message="Create your first course to get started."
+          actionLabel="New Course"
+          actionLink="/courses/new"
+          class="col-span-full block" />
       }
     </div>
   }

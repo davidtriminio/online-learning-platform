@@ -8,17 +8,18 @@
   </span>
 
   <div class="max-w-sm space-y-1.5">
-    <h3 class="text-lg font-bold text-text-main">No courses yet</h3>
+    <h3 class="text-lg font-bold text-text-main">{{ title() }}</h3>
     <p class="text-sm leading-relaxed text-text-secondary">
-      There's nothing here right now. New content will appear as soon as it's available.
+      {{ message() }}
     </p>
   </div>
-
-  <button
-    type="button"
-    class="mt-2 inline-flex items-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:shadow-md motion-safe:hover:scale-[1.02] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page"
-  >
-    <svg lucidePlus [size]="18" [strokeWidth]="2"></svg>
-    <span>Browse catalog</span>
-  </button>
+  @if (actionLabel() && actionLink()) {
+    <a
+      [routerLink]="actionLink()"
+      class="mt-2 inline-flex items-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:shadow-md motion-safe:hover:scale-[1.02] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page"
+    >
+      <svg lucideHome [size]="18" [strokeWidth]="2"></svg>
+      <span>{{ actionLabel() }}</span>
+    </a>
+  }
 </section>

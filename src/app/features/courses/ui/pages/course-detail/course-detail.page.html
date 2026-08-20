@@ -129,5 +129,10 @@
     </section>
   </main>
 } @else {
-  <app-empty-state class="col-span-full block" title="Course not found."/>
+  <app-empty-state
+    title="Course not found."
+    message="Explore course list."
+    actionLabel="Go to Courses"
+    actionLink="/courses"
+    class="col-span-full block" />
 }
