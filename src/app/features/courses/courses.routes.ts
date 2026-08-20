@@ -17,7 +17,7 @@ export const coursesRoutes: Routes = [
       import('./ui/pages/course-detail/course-detail.page').then((m) => m.CourseDetailPage),
   },
   {
-    path: ':id',
+    path: ':id/edit',
     loadComponent: () =>
       import('./ui/pages/course-form/course-form.page').then((m) => m.CourseFormPage),
   },

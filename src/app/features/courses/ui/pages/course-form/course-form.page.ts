@@ -31,7 +31,11 @@ export class CourseFormPage {
   private readonly store = inject(CoursesStore)
 
   readonly id = input(undefined, { transform: numberAttribute })
-  protected readonly isEdit = computed(() => this.id() !== undefined)
+
+  protected readonly isEdit = computed(() =>{
+    const id = this.id()
+    return id !== undefined && !Number.isNaN(id)
+  })
 
   // Estado del envío
   protected readonly submitting = signal(false)

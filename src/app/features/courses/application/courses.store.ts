@@ -64,7 +64,11 @@ export const CoursesStore = signalStore(
           tap(() => patchState(store, { status: 'loading' })),
           switchMap(({ id, input }) => {
             const base = store.entityMap()[id]
-            if (!base) return EMPTY
+            if (!base) {
+              console.error('[courses] update base not found for id', id)
+              patchState(store, { status: 'error' })
+              return EMPTY
+            }
             return repo.update(base, input).pipe(
               tap({
                 next: (course) =>
