@@ -8,33 +8,38 @@ import { CourseResponseDto } from './dto/course-response.dto';
 import { COURSE_ENDPOINTS } from '../../../core/endpoints';
 import { toCourse, toCourseRequestDto } from './mappers/course.mapper';
 
-@Injectable({providedIn: 'root'})
+@Injectable({ providedIn: 'root' })
 export class CourseRepository {
-  private http = inject(HttpClient)
-  private baseUrl = environment.apiUrl
+  private http = inject(HttpClient);
+  private baseUrl = environment.apiUrl;
 
-  getAll(): Observable<Course[]>{
+  getAll(): Observable<Course[]> {
     return this.http
-    .get<ApiResponse<CourseResponseDto[]>>(`${this.baseUrl}${COURSE_ENDPOINTS.getAll}`)
-    .pipe(map((res)=> res.data.map(toCourse)))
+      .get<ApiResponse<CourseResponseDto[]>>(`${this.baseUrl}${COURSE_ENDPOINTS.getAll}`)
+      .pipe(map((res) => res.data.map(toCourse)));
   }
 
-  add(input: CourseInput): Observable<Course>{
+  add(input: CourseInput): Observable<Course> {
     return this.http
-    .post<ApiResponse<CourseResponseDto>>(`${this.baseUrl}${COURSE_ENDPOINTS.add}`, input)
-    .pipe(map((res) => toCourse(res.data)))
+      .post<ApiResponse<CourseResponseDto>>(
+        `${this.baseUrl}${COURSE_ENDPOINTS.add}`,
+        toCourseRequestDto(input),
+      )
+      .pipe(map((res) => toCourse(res.data)));
   }
 
-  update(base: Course, input: CourseInput): Observable<Course>{
+  update(base: Course, input: CourseInput): Observable<Course> {
     return this.http
-    .put<ApiResponse<CourseResponseDto>>(`${this.baseUrl}${COURSE_ENDPOINTS.update}`, toCourseRequestDto(input, base))
-    .pipe(map((res) => toCourse(res.data)))
+      .put<ApiResponse<CourseResponseDto>>(
+        `${this.baseUrl}${COURSE_ENDPOINTS.update}`,
+        toCourseRequestDto(input, base),
+      )
+      .pipe(map((res) => toCourse(res.data)));
   }
 
-  delete(id: number): Observable<void>{
+  delete(id: number): Observable<void> {
     return this.http
-    .delete<ApiResponse<boolean>>(`${this.baseUrl}${COURSE_ENDPOINTS.deleteById}?${id}`)
-    .pipe(map(()=> undefined))
+      .delete<ApiResponse<boolean>>(`${this.baseUrl}${COURSE_ENDPOINTS.deleteById}?Id=${id}`)
+      .pipe(map(() => undefined));
   }
-
 }
