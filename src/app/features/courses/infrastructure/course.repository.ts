@@ -39,7 +39,7 @@ export class CourseRepository {
 
   delete(id: number): Observable<void> {
     return this.http
-      .delete<ApiResponse<boolean>>(`${this.baseUrl}${COURSE_ENDPOINTS.deleteById}?Id=${id}`)
+      .delete<ApiResponse<boolean>>(`${this.baseUrl}${COURSE_ENDPOINTS.deleteById}?courseId=${id}`)
       .pipe(map(() => undefined))
   }
 }
