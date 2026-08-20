@@ -1,5 +1,5 @@
 import { Component, computed, inject, input, numberAttribute } from '@angular/core'
-import { Router } from '@angular/router'
+import { Router, RouterLink } from '@angular/router'
 import { CoursesStore } from '../../../application/courses.store'
 import {
   LucideArrowLeft,
@@ -12,7 +12,15 @@ import { EmptyState } from '../../../../../shared/ui/empty-state/empty-state'
 
 @Component({
   selector: 'app-course-detail',
-  imports: [LucideClock, LucidePlay, LucideCirclePlay, LucideBookmark, LucideArrowLeft, EmptyState],
+  imports: [
+    LucideClock,
+    LucidePlay,
+    LucideCirclePlay,
+    LucideBookmark,
+    LucideArrowLeft,
+    EmptyState,
+    RouterLink,
+  ],
   templateUrl: './course-detail.page.html',
 })
 export class CourseDetailPage {

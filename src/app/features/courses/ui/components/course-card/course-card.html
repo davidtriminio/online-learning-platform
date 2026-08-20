@@ -40,7 +40,15 @@
           <span class="font-medium text-text-main">{{ course().totalVideos }}</span>
           <span>videos</span>
         </span>
+
       </div>
+      <a
+        routerLink="/courses/{{ course().id }}"
+        class="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:shadow-md motion-safe:hover:scale-[1.01] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page"
+      >
+        <span>View course</span>
+        <svg lucideArrowRight [size]="16" [strokeWidth]="2"></svg>
+      </a>
     </div>
   </article>
 </app-card-container>
