@@ -5,15 +5,15 @@ import {
   withHooks,
   withMethods,
   withState,
-} from '@ngrx/signals';
-import { addEntity, setAllEntities, updateEntity, withEntities } from '@ngrx/signals/entities';
-import { Course, CourseInput } from '../domain/course.model';
-import { computed, inject } from '@angular/core';
-import { CourseRepository } from '../infrastructure/course.repository';
-import { rxMethod } from '@ngrx/signals/rxjs-interop';
-import { catchError, EMPTY, pipe, switchMap, tap } from 'rxjs';
+} from '@ngrx/signals'
+import { addEntity, setAllEntities, updateEntity, withEntities } from '@ngrx/signals/entities'
+import { Course, CourseInput } from '../domain/course.model'
+import { computed, inject } from '@angular/core'
+import { CourseRepository } from '../infrastructure/course.repository'
+import { rxMethod } from '@ngrx/signals/rxjs-interop'
+import { catchError, EMPTY, pipe, switchMap, tap } from 'rxjs'
 
-type CoursesState = { status: 'idle' | 'loading' | 'error' };
+type CoursesState = { status: 'idle' | 'loading' | 'error' }
 
 export const CoursesStore = signalStore(
   { providedIn: 'root' },
@@ -34,15 +34,15 @@ export const CoursesStore = signalStore(
             tap({
               next: (courses) => patchState(store, setAllEntities(courses), { status: 'idle' }),
               error: (e) => {
-                console.error('[courses] load failed', e);
-                patchState(store, { status: 'error' });
+                console.error('[courses] load failed', e)
+                patchState(store, { status: 'error' })
               },
             }),
             catchError(() => EMPTY),
           ),
         ),
       ),
-    );
+    )
     return {
       loadAll: refresh,
       addCourse: rxMethod<CourseInput>(
@@ -63,8 +63,8 @@ export const CoursesStore = signalStore(
         pipe(
           tap(() => patchState(store, { status: 'loading' })),
           switchMap(({ id, input }) => {
-            const base = store.entityMap()[id];
-            if (!base) return EMPTY;
+            const base = store.entityMap()[id]
+            if (!base) return EMPTY
             return repo.update(base, input).pipe(
               tap({
                 next: (course) =>
@@ -74,7 +74,7 @@ export const CoursesStore = signalStore(
                 error: () => patchState(store, { status: 'error' }),
               }),
               catchError(() => EMPTY),
-            );
+            )
           }),
         ),
       ),
@@ -86,8 +86,8 @@ export const CoursesStore = signalStore(
               tap({
                 next: () => refresh(),
                 error: (e) => {
-                  console.error('[courses] delete failed', e);
-                  patchState(store, { status: 'error' });
+                  console.error('[courses] delete failed', e)
+                  patchState(store, { status: 'error' })
                 },
               }),
               catchError(() => EMPTY),
@@ -95,11 +95,11 @@ export const CoursesStore = signalStore(
           ),
         ),
       ),
-    };
+    }
   }),
   withHooks({
     onInit(store) {
-      store.loadAll();
+      store.loadAll()
     },
   }),
-);
+)

@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { LucideRotateCw, LucideTriangleAlert } from '@lucide/angular';
+import { Component } from '@angular/core'
+import { LucideRotateCw, LucideTriangleAlert } from '@lucide/angular'
 
 @Component({
   selector: 'app-error-state',

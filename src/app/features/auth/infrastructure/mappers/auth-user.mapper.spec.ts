@@ -1,5 +1,5 @@
-import {toAuthUser} from './auth-user.mapper'
-import {userResponseDtoMock} from './../../../../testing/mocks/auth.mock'
+import { toAuthUser } from './auth-user.mapper'
+import { userResponseDtoMock } from './../../../../testing/mocks/auth.mock'
 import { expect } from 'vitest'
 
 describe('toAuthUser', () => {
@@ -30,5 +30,5 @@ describe('toAuthUser', () => {
   it('converts createdDate to a Date instance', () => {
     const user = toAuthUser(userResponseDtoMock)
     expect(user.createdDate).toBeInstanceOf(Date)
-  });
+  })
 })
