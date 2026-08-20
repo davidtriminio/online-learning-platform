@@ -1,12 +1,19 @@
-import { patchState, signalStore, withComputed, withHooks, withMethods, withState } from '@ngrx/signals'
-import { addEntity, removeEntity, setAllEntities, updateEntity, withEntities } from '@ngrx/signals/entities';
+import {
+  patchState,
+  signalStore,
+  withComputed,
+  withHooks,
+  withMethods,
+  withState,
+} from '@ngrx/signals';
+import { addEntity, setAllEntities, updateEntity, withEntities } from '@ngrx/signals/entities';
 import { Course, CourseInput } from '../domain/course.model';
-import { computed, inject } from '@angular/core'
-import { CourseRepository } from '../infrastructure/course.repository'
-import { rxMethod } from '@ngrx/signals/rxjs-interop'
-import { catchError, EMPTY, pipe, switchMap, tap } from 'rxjs'
+import { computed, inject } from '@angular/core';
+import { CourseRepository } from '../infrastructure/course.repository';
+import { rxMethod } from '@ngrx/signals/rxjs-interop';
+import { catchError, EMPTY, pipe, switchMap, tap } from 'rxjs';
 
-type CoursesState = { status: 'idle' | 'loading' | 'error' }
+type CoursesState = { status: 'idle' | 'loading' | 'error' };
 
 export const CoursesStore = signalStore(
   { providedIn: 'root' },
@@ -18,68 +25,81 @@ export const CoursesStore = signalStore(
     isLoading: computed(() => status() === 'loading'),
     hasError: computed(() => status() === 'error'),
   })),
-  withMethods((store, repo = inject(CourseRepository)) => ({
-    loadAll: rxMethod<void>(
+  withMethods((store, repo = inject(CourseRepository)) => {
+    const refresh = rxMethod<void>(
       pipe(
         tap(() => patchState(store, { status: 'loading' })),
         switchMap(() =>
           repo.getAll().pipe(
             tap({
               next: (courses) => patchState(store, setAllEntities(courses), { status: 'idle' }),
-              error: () => patchState(store, { status: 'error' }),
+              error: (e) => {
+                console.error('[courses] load failed', e);
+                patchState(store, { status: 'error' });
+              },
             }),
             catchError(() => EMPTY),
           ),
         ),
       ),
-    ),
-    addCourse: rxMethod<CourseInput>(
-      pipe(
-        tap(() => patchState(store, { status: 'loading' })),
-        switchMap((input) =>
-        repo.add(input).pipe(
-          tap({
-            next: (course) => patchState(store, addEntity(course), {status: 'idle' }),
-            error: () => patchState(store, { status: 'error' }),
+    );
+    return {
+      loadAll: refresh,
+      addCourse: rxMethod<CourseInput>(
+        pipe(
+          tap(() => patchState(store, { status: 'loading' })),
+          switchMap((input) =>
+            repo.add(input).pipe(
+              tap({
+                next: (course) => patchState(store, addEntity(course), { status: 'idle' }),
+                error: () => patchState(store, { status: 'error' }),
+              }),
+              catchError(() => EMPTY),
+            ),
+          ),
+        ),
+      ),
+      updateCourse: rxMethod<{ id: number; input: CourseInput }>(
+        pipe(
+          tap(() => patchState(store, { status: 'loading' })),
+          switchMap(({ id, input }) => {
+            const base = store.entityMap()[id];
+            if (!base) return EMPTY;
+            return repo.update(base, input).pipe(
+              tap({
+                next: (course) =>
+                  patchState(store, updateEntity({ id: course.id, changes: course }), {
+                    status: 'idle',
+                  }),
+                error: () => patchState(store, { status: 'error' }),
+              }),
+              catchError(() => EMPTY),
+            );
           }),
-          catchError(() => EMPTY),
-        )
-        )
-      )
-    ),
-    updateCourse: rxMethod<{id: number, input: CourseInput}>(
-      pipe(
-        tap(() => patchState(store, { status: 'loading' })),
-        switchMap(({id, input}) => {
-          const base = store.entityMap()[id]
-          if (!base) return EMPTY
-          return repo.update(base, input).pipe(
-            tap({
-              next: (course) => patchState(store, updateEntity({id: course.id, changes: course}), {status: 'idle' }),
-              error: () => patchState(store, { status: 'error' }),
-            }),
-            catchError(() => EMPTY),
-          )
-        })
-      )
-    ),
-    deleteCourse: rxMethod<number>(
-      pipe(
-        tap(() => patchState(store, { status: 'loading' })),
-        switchMap((id) =>
-        repo.delete(id).pipe(
-          tap({
-            next: () => patchState(store, removeEntity(id), { status: 'idle' }),
-            error: () => patchState(store, { status: 'error' }),
-          }),
-          catchError(() => EMPTY),
-        ))
-      )
-    )
-  })),
+        ),
+      ),
+      deleteCourse: rxMethod<number>(
+        pipe(
+          tap(() => patchState(store, { status: 'loading' })),
+          switchMap((id) =>
+            repo.delete(id).pipe(
+              tap({
+                next: () => refresh(),
+                error: (e) => {
+                  console.error('[courses] delete failed', e);
+                  patchState(store, { status: 'error' });
+                },
+              }),
+              catchError(() => EMPTY),
+            ),
+          ),
+        ),
+      ),
+    };
+  }),
   withHooks({
-    onInit(store){
-      store.loadAll()
-    }
-  })
-)
+    onInit(store) {
+      store.loadAll();
+    },
+  }),
+);
