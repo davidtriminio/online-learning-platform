@@ -1,5 +1,5 @@
-import { Routes } from '@angular/router';
-import { authGuard } from './features/auth/infrastructure/auth.guard';
+import { Routes } from '@angular/router'
+import { authGuard } from './features/auth/infrastructure/auth.guard'
 
 export const routes: Routes = [
   {
@@ -20,4 +20,4 @@ export const routes: Routes = [
     redirectTo: 'login',
     pathMatch: 'full',
   },
-];
+]

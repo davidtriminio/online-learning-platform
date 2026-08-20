@@ -1,7 +1,7 @@
-import { UserResponseDto } from '../dto/user-response.dto';
-import { AuthUser } from '../../domain/auth-user.model';
+import { UserResponseDto } from '../dto/user-response.dto'
+import { AuthUser } from '../../domain/auth-user.model'
 
-export function toAuthUser(dto: UserResponseDto): AuthUser{
+export function toAuthUser(dto: UserResponseDto): AuthUser {
   return {
     id: dto.userId,
     userName: dto.userName,
@@ -9,6 +9,6 @@ export function toAuthUser(dto: UserResponseDto): AuthUser{
     fullName: dto.fullName,
     role: dto.role,
     projectName: dto.projectName,
-    createdDate: new Date(dto.createdDate)
+    createdDate: new Date(dto.createdDate),
   }
 }

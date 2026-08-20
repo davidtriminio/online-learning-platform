@@ -1,0 +1,39 @@
+<main class="mx-auto w-full max-w-7xl px-5 py-8 sm:px-8 lg:py-10">
+  <header class="mb-6 flex items-center justify-between gap-4 sm:mb-8">
+    <div>
+      <h1 class="text-2xl font-black tracking-tight text-text-main sm:text-3xl">Courses</h1>
+      <p class="mt-1 text-sm text-text-secondary">Browse the full catalog.</p>
+    </div>
+
+    <a
+      routerLink="new"
+      class="inline-flex shrink-0 items-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:shadow-md motion-safe:hover:scale-[1.02] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page"
+    >
+      <svg lucidePlus [size]="18" [strokeWidth]="2"></svg>
+      <span>New Course</span>
+    </a>
+  </header>
+
+  @if (store.status() === 'loading') {
+    <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      @for (i of [1, 2, 3, 4, 5, 6]; track i) {
+        <app-card-skeleton />
+      }
+    </div>
+  } @else if (store.status() === 'error') {
+    <app-error-state class="block" />
+  } @else {
+    <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      @for (course of store.courses(); track course.id) {
+        <app-course-card [course]="course" />
+      } @empty {
+        <app-empty-state
+          title="No courses found."
+          message="Create your first course to get started."
+          actionLabel="New Course"
+          actionLink="/courses/new"
+          class="col-span-full block" />
+      }
+    </div>
+  }
+</main>

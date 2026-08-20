@@ -1,0 +1,57 @@
+@if (open()) {
+  <div
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="confirm-title"
+    aria-describedby="confirm-desc"
+    class="fixed inset-0 z-50 flex items-center justify-center p-4"
+  >
+    <div class="absolute inset-0 bg-black/50 motion-safe:animate-in motion-safe:fade-in" (click)="cancel.emit()"></div>
+
+    <div
+      class="relative w-full max-w-md rounded-2xl border border-border bg-surface p-6 shadow-xl"
+    >
+      <div class="flex items-start gap-4">
+      <span class="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-danger/10 text-danger">
+        <svg lucideTriangleAlert [size]="22" [strokeWidth]="1.5"></svg>
+      </span>
+        <div class="min-w-0">
+          <h2 id="delete-title" class="text-lg font-bold text-text-main">{{ title() }}</h2>
+          @if (message()) {
+            <p id="delete-desc" class="mt-1 text-sm leading-relaxed text-text-secondary">
+              {{ message() }}
+            </p>
+          }
+        </div>
+      </div>
+
+      @if (error()) {
+        <div
+          role="alert"
+          class="mb-6 flex items-start gap-3 rounded-xl border border-danger/30 bg-danger/10 px-4 py-3 text-sm text-danger"
+        >
+          <svg lucideAlertCircle class="mt-0.5 h-4 w-4 shrink-0"></svg>
+          <span>{{ error() }}</span>
+        </div>
+      }
+
+      <div class="mt-6 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
+        <button
+          type="button"
+          (click)="cancel.emit()"
+          class="inline-flex cursor-pointer items-center justify-center rounded-xl border border-border bg-surface px-4 py-2.5 text-sm font-semibold text-text-main shadow-sm transition-colors duration-200 hover:bg-primary-light hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page"
+        >
+          {{ cancelLabel() }}
+        </button>
+        <button
+          type="button"
+          (click)="confirm.emit()"
+          class="inline-flex cursor-pointer items-center justify-center gap-2 rounded-xl bg-danger px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:shadow-md motion-safe:hover:scale-[1.01] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-danger/50 focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page"
+        >
+          <svg lucideTrash2 [size]="16" [strokeWidth]="2"></svg>
+          <span>{{ loading() ? 'Deleting...' : confirmLabel() }}</span>
+        </button>
+      </div>
+    </div>
+  </div>
+}

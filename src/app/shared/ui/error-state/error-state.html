@@ -1,0 +1,24 @@
+<section
+  class="flex flex-col items-center justify-center gap-4 rounded-2xl border border-danger/30 bg-surface px-6 py-14 text-center"
+>
+  <span
+    class="grid h-16 w-16 place-items-center rounded-full bg-danger/10 text-danger"
+  >
+    <svg lucideTriangleAlert [size]="32" [strokeWidth]="1.5"></svg>
+  </span>
+
+  <div class="max-w-sm space-y-1.5">
+    <h3 class="text-lg font-bold text-text-main">Something went wrong</h3>
+    <p class="text-sm leading-relaxed text-text-secondary">
+      We couldn't load this content. Check your connection and try again.
+    </p>
+  </div>
+
+  <button
+    type="button"
+    class="mt-2 inline-flex items-center gap-2 rounded-xl border border-border bg-surface px-4 py-2.5 text-sm font-semibold text-text-main shadow-sm transition-all duration-200 hover:bg-primary-light hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page"
+  >
+    <svg lucideRotateCw [size]="18" [strokeWidth]="2"></svg>
+    <span>Try again</span>
+  </button>
+</section>
