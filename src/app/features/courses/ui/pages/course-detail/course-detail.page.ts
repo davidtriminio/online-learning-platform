@@ -1,4 +1,4 @@
-import { Component, computed, inject, input, numberAttribute } from '@angular/core'
+import { Component, computed, inject, input, numberAttribute, signal } from '@angular/core'
 import { Router, RouterLink } from '@angular/router'
 import { CoursesStore } from '../../../application/courses.store'
 import {
@@ -6,7 +6,10 @@ import {
   LucideBookmark,
   LucideCirclePlay,
   LucideClock,
+  LucidePencil,
   LucidePlay,
+  LucideTrash2,
+  LucideTriangleAlert,
 } from '@lucide/angular'
 import { EmptyState } from '../../../../../shared/ui/empty-state/empty-state'
 
@@ -20,6 +23,9 @@ import { EmptyState } from '../../../../../shared/ui/empty-state/empty-state'
     LucideArrowLeft,
     EmptyState,
     RouterLink,
+    LucideTrash2,
+    LucidePencil,
+    LucideTriangleAlert,
   ],
   templateUrl: './course-detail.page.html',
 })
@@ -30,8 +36,19 @@ export class CourseDetailPage {
   readonly id = input.required({ transform: numberAttribute })
   protected readonly course = computed(() => this.store.entityMap()[this.id()])
 
+  protected readonly confirmOpen = signal(false)
+
+  protected openConfirm(): void {
+    this.confirmOpen.set(true)
+  }
+
+  protected closeConfirm(): void {
+    this.confirmOpen.set(false)
+  }
+
   protected onDelete(): void {
     this.store.deleteCourse(this.id())
+    this.confirmOpen.set(false)
     this.router.navigate(['/courses'])
   }
 }

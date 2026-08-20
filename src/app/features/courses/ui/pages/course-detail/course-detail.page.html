@@ -1,6 +1,6 @@
 @if (course(); as c){
   <main class="mx-auto w-full max-w-7xl px-5 py-8 sm:px-8 lg:py-10">
-    <nav class="mb-6">
+    <nav class="mb-6 flex flex-wrap items-center justify-between gap-3">
       <a
         routerLink="/courses"
         class="inline-flex items-center gap-1.5 text-sm font-semibold text-text-secondary transition-colors hover:text-primary focus-visible:outline-none focus-visible:underline"
@@ -8,6 +8,25 @@
         <svg lucideArrowLeft [size]="18" [strokeWidth]="2"></svg>
         <span>Back to courses</span>
       </a>
+
+      <div class="flex items-center gap-2">
+        <a
+          routerLink="edit"
+          class="inline-flex items-center gap-2 rounded-xl border border-border bg-surface px-3.5 py-2 text-sm font-semibold text-text-main shadow-sm transition-colors duration-200 hover:bg-primary-light hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page"
+        >
+          <svg lucidePencil [size]="16" [strokeWidth]="2"></svg>
+          <span>Edit</span>
+        </a>
+
+        <a
+          type="button"
+          (click)="openConfirm()"
+          class="inline-flex cursor-pointer items-center gap-2 rounded-xl border border-danger/30 bg-danger/10 px-3.5 py-2 text-sm font-semibold text-danger shadow-sm transition-colors duration-200 hover:bg-danger/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-danger/40 focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page"
+        >
+          <svg lucideTrash2 [size]="16" [strokeWidth]="2"></svg>
+          <span>Delete</span>
+        </a>
+      </div>
     </nav>
 
     <div class="grid grid-cols-1 gap-8 lg:grid-cols-[1.4fr_1fr] lg:gap-10">
@@ -128,6 +147,52 @@
       </ul>
     </section>
   </main>
+  @if (confirmOpen()) {
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="delete-title"
+      aria-describedby="delete-desc"
+      class="fixed inset-0 z-50 flex items-center justify-center p-4"
+    >
+      <div class="absolute inset-0 bg-black/50 motion-safe:animate-in motion-safe:fade-in"></div>
+
+      <div
+        class="relative w-full max-w-md rounded-2xl border border-border bg-surface p-6 shadow-xl"
+      >
+        <div class="flex items-start gap-4">
+      <span class="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-danger/10 text-danger">
+        <svg lucideTriangleAlert [size]="22" [strokeWidth]="1.5"></svg>
+      </span>
+          <div class="min-w-0">
+            <h2 id="delete-title" class="text-lg font-bold text-text-main">Delete course</h2>
+            <p id="delete-desc" class="mt-1 text-sm leading-relaxed text-text-secondary">
+              Are you sure you want to delete this course? This action can't be undone and all its
+              content will be removed.
+            </p>
+          </div>
+        </div>
+
+        <div class="mt-6 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
+          <button
+            type="button"
+            (click)="closeConfirm()"
+            class="inline-flex cursor-pointer items-center justify-center rounded-xl border border-border bg-surface px-4 py-2.5 text-sm font-semibold text-text-main shadow-sm transition-colors duration-200 hover:bg-primary-light hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page"
+          >
+            Cancel
+          </button>
+          <button
+            type="button"
+            (click)="onDelete()"
+            class="inline-flex cursor-pointer items-center justify-center gap-2 rounded-xl bg-danger px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:shadow-md motion-safe:hover:scale-[1.01] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-danger/50 focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page"
+          >
+            <svg lucideTrash2 [size]="16" [strokeWidth]="2"></svg>
+            <span>Delete course</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  }
 } @else {
   <app-empty-state
     title="Course not found."
