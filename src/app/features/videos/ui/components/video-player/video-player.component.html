@@ -1,0 +1,20 @@
+<figure class="overflow-hidden rounded-2xl border border-border bg-black shadow-sm">
+  @if (isYoutube()) {
+    <iframe
+      [src]="embedUrl()"
+      title="Course video"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+      allowfullscreen
+      class="aspect-video w-full border-0"
+    ></iframe>
+  } @else {
+    <video
+      #video
+      [src]="src()"
+      controls
+      (timeupdate)="onTimeUpdate()"
+      (ended)="ended.emit()"
+      class="aspect-video w-full bg-black"
+    ></video>
+  }
+</figure>
