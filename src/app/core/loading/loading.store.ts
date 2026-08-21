@@ -1,5 +1,6 @@
-import { computed, signal } from '@angular/core'
+import { computed, Injectable, signal } from '@angular/core'
 
+@Injectable({ providedIn: 'root' })
 export class LoadingStore {
   private _count = signal(0)
   readonly isLoading = computed(() => this._count() > 0)

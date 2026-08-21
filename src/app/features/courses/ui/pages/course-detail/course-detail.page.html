@@ -1,4 +1,8 @@
-@if (course(); as c) {
+@if (isLoading() && !course()) {
+  <main class="mx-auto w-full max-w-7xl px-5 py-8" role="status" aria-live="polite">
+    <p class="text-sm text-text-secondary">Loading course…</p>
+  </main>
+} @else if (course(); as c) {
   <main class="mx-auto w-full max-w-7xl px-5 py-8 sm:px-8 lg:py-10">
     <nav class="mb-6 flex flex-wrap items-center justify-between gap-3">
       <a
@@ -137,18 +141,7 @@
         </span>
       </header>
 
-      @if (courseVideos.isLoading()) {
-        <ul class="space-y-2">
-          @for (i of [1, 2, 3]; track i) {
-            <li class="flex items-center gap-4 rounded-2xl border border-border bg-surface p-4">
-              <span class="h-9 w-9 shrink-0 rounded-lg bg-border motion-safe:animate-pulse"></span>
-              <span class="h-3 w-1/2 rounded-full bg-border motion-safe:animate-pulse"></span>
-            </li>
-          }
-        </ul>
-      } @else if (courseVideos.error()) {
-        <app-error-state class="block" />
-      } @else {
+      @if (course(); as c) {
         <ul class="divide-y divide-border overflow-hidden rounded-2xl border border-border bg-surface">
           @for (cv of courseVideos.value() ?? []; track cv.courseVideoId; let i = $index) {
             <li>
@@ -224,6 +217,9 @@
     (confirm)="onDelete()"
     (cancel)="closeConfirm()"
   />
+} @else if (hasError()) {
+  <app-error-state class="block" />
+
 } @else {
   <app-empty-state
     title="Course not found."
