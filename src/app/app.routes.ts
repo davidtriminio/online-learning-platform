@@ -11,13 +11,14 @@ export const routes: Routes = [
     canActivate: [authGuard],
     loadChildren: () => import('./features/courses/courses.routes').then((m) => m.coursesRoutes),
   },
-  // {
-  //   path: 'courses',
-  //   canActivate: [authGuard],
-  // },
   {
     path: '',
     redirectTo: 'login',
     pathMatch: 'full',
+  },
+  {
+    path: 'videos',
+    canActivate: [authGuard],
+    loadChildren: () => import('./features/videos/videos.routes').then((m) => m.videosRoutes),
   },
 ]

@@ -8,7 +8,7 @@ export interface VideoForm {
   duration: string
 }
 
-export const VideoSchema = schema<VideoForm>((path) => {
+export const videoSchema = schema<VideoForm>((path) => {
   required(path.title, { message: 'Title is required.' })
   required(path.url, { message: 'Video URl is required.' })
 })
