@@ -1,0 +1,101 @@
+<main class="mx-auto w-full max-w-7xl px-5 py-8 sm:px-8 lg:py-10">
+  <header class="mb-6 flex items-center justify-between gap-4 sm:mb-8">
+    <div>
+      <h1 class="text-2xl font-black tracking-tight text-text-main sm:text-3xl">Videos</h1>
+      <p class="mt-1 text-sm text-text-secondary">Manage the video library.</p>
+    </div>
+
+    <a
+      routerLink="new"
+      class="inline-flex shrink-0 items-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:shadow-md motion-safe:hover:scale-[1.02] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page"
+    >
+      <svg lucidePlus [size]="18" [strokeWidth]="2"></svg>
+      <span>New video</span>
+    </a>
+  </header>
+
+  @if (store.status() === 'loading') {
+    <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      @for (i of [1, 2, 3, 4, 5, 6]; track i) {
+        <article class="overflow-hidden rounded-2xl border border-border bg-surface shadow-sm">
+          <div class="aspect-video w-full bg-primary-light motion-safe:animate-pulse"></div>
+          <div class="space-y-3 p-5">
+            <div class="h-4 w-3/4 rounded-full bg-border motion-safe:animate-pulse"></div>
+            <div class="h-3 w-full rounded-full bg-border motion-safe:animate-pulse"></div>
+          </div>
+        </article>
+      }
+    </div>
+  } @else if (store.status() === 'error') {
+    <app-error-state class="block" />
+  } @else {
+    <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      @for (video of store.videos(); track video.id) {
+        <article
+          class="group flex h-full flex-col overflow-hidden rounded-2xl border border-border bg-surface shadow-sm transition-all duration-200 ease-in-out hover:shadow-md motion-safe:hover:-translate-y-1"
+        >
+          <div class="relative aspect-video w-full overflow-hidden bg-primary-light">
+            <img
+              [src]="video.thumbnail"
+              [alt]="video.title"
+              loading="lazy"
+              class="h-full w-full object-cover transition-transform duration-300 ease-out motion-safe:group-hover:scale-105"
+            />
+            <span
+              class="absolute bottom-2 right-2 inline-flex items-center gap-1 rounded-md bg-black/70 px-2 py-0.5 text-xs font-medium text-white"
+            >
+              <svg lucideClock [size]="12" [strokeWidth]="2"></svg>
+              {{ video.duration }}
+            </span>
+          </div>
+
+          <div class="flex flex-1 flex-col gap-2 p-5">
+            <h3 class="line-clamp-1 text-base font-bold leading-snug text-text-main">
+              {{ video.title }}
+            </h3>
+            <p class="line-clamp-2 text-sm leading-relaxed text-text-secondary">
+              {{ video.description }}
+            </p>
+
+            <div class="mt-auto flex items-center gap-2 border-t border-border pt-4">
+              <a
+                [routerLink]="[video.id, 'edit']"
+                class="inline-flex flex-1 items-center justify-center gap-2 rounded-xl border border-border bg-surface px-3 py-2 text-sm font-semibold text-text-main transition-colors duration-200 hover:bg-primary-light hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
+              >
+                <svg lucidePencil [size]="16" [strokeWidth]="2"></svg>
+                <span>Edit</span>
+              </a>
+
+              <button
+                type="button"
+                (click)="askDelete(video.id)"
+                [attr.aria-label]="'Delete ' + video.title"
+                class="inline-flex items-center justify-center gap-2 rounded-xl border border-danger/30 bg-danger/10 px-3 py-2 text-sm font-semibold text-danger transition-colors duration-200 hover:bg-danger/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-danger/40"
+              >
+                <svg lucideTrash2 [size]="16" [strokeWidth]="2"></svg>
+              </button>
+            </div>
+          </div>
+        </article>
+      } @empty {
+        <app-empty-state
+          title="No videos yet."
+          message="Add your first video to the library."
+          actionLabel="New Video"
+          actionLink="/videos/new"
+          class="col-span-full block" />
+      }
+    </div>
+  }
+</main>
+
+<app-confirm-dialog
+  [open]="toDelete() !== null"
+  [loading]="store.isLoading()"
+  title="Delete video"
+  message="Are you sure you want to delete this video? This action cannot be undone."
+  cancelLabel="Cancel"
+  confirmLabel="Delete"
+  (confirm)="confirmDelete()"
+  (cancel)="cancelDelete()"
+/>
