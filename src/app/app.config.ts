@@ -4,11 +4,12 @@ import { provideHttpClient, withInterceptors } from '@angular/common/http'
 import { routes } from './app.routes'
 import { authInterceptor } from './features/auth/infrastructure/auth.interceptor'
 import { apiErrorInterceptor } from './core/http/api-error-interceptor'
+import { loadingInterceptor } from './core/loading/loading-interceptor'
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes, withComponentInputBinding()),
-    provideHttpClient(withInterceptors([apiErrorInterceptor, authInterceptor])),
+    provideHttpClient(withInterceptors([apiErrorInterceptor, loadingInterceptor, authInterceptor])),
   ],
 }

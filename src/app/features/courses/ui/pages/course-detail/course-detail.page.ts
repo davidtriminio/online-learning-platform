@@ -53,6 +53,8 @@ export class CourseDetailPage {
   private router = inject(Router)
   private destroyRef = inject(DestroyRef)
   private readonly store = inject(CoursesStore)
+  protected readonly isLoading = this.store.isLoading
+  protected readonly hasError = this.store.hasError
 
   private courseVideoRepo = inject(CourseVideoRepository)
   protected readonly videosStore = inject(VideosStore)
