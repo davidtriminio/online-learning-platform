@@ -1,4 +1,4 @@
-@if (course(); as c){
+@if (course(); as c) {
   <main class="mx-auto w-full max-w-7xl px-5 py-8 sm:px-8 lg:py-10">
     <nav class="mb-6 flex flex-wrap items-center justify-between gap-3">
       <a
@@ -18,16 +18,37 @@
           <span>Edit</span>
         </a>
 
-        <a
+        <button
           type="button"
           (click)="openConfirm()"
-          class="inline-flex cursor-pointer items-center gap-2 rounded-xl border border-danger/30 bg-danger/10 px-3.5 py-2 text-sm font-semibold text-danger shadow-sm transition-colors duration-200 hover:bg-danger/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-danger/40 focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page"
+          class="inline-flex items-center gap-2 rounded-xl border border-danger/30 bg-danger/10 px-3.5 py-2 text-sm font-semibold text-danger shadow-sm transition-colors duration-200 hover:bg-danger/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-danger/40 focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page"
         >
           <svg lucideTrash2 [size]="16" [strokeWidth]="2"></svg>
           <span>Delete</span>
-        </a>
+        </button>
       </div>
     </nav>
+
+    <!-- Now playing -->
+    @if (selectedVideoUrl(); as url) {
+      <section class="mb-8">
+        <div class="mb-3 flex items-center justify-between gap-3">
+          <h2 class="inline-flex items-center gap-2 text-lg font-bold text-text-main">
+            <svg lucidePlay [size]="18" [strokeWidth]="2" class="text-primary"></svg>
+            <span>Now playing</span>
+          </h2>
+          <button
+            type="button"
+            (click)="selectedVideoUrl.set(null)"
+            class="inline-flex items-center gap-1.5 rounded-lg border border-border bg-surface px-2.5 py-1.5 text-xs font-semibold text-text-secondary transition-colors hover:bg-primary-light hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
+          >
+            <svg lucideX [size]="14" [strokeWidth]="2"></svg>
+            <span>Close</span>
+          </button>
+        </div>
+        <app-video-player [src]="url" />
+      </section>
+    }
 
     <div class="grid grid-cols-1 gap-8 lg:grid-cols-[1.4fr_1fr] lg:gap-10">
       <!-- Thumbnail -->
@@ -41,38 +62,38 @@
 
       <!-- Summary / CTA -->
       <div class="flex flex-col">
-      <span
-        class="mb-3 inline-flex w-fit items-center rounded-full bg-primary px-3 py-1 text-xs font-semibold uppercase tracking-wide text-white shadow-sm"
-      >
-        Course
-      </span>
+        <span
+          class="mb-3 inline-flex w-fit items-center rounded-full bg-primary px-3 py-1 text-xs font-semibold uppercase tracking-wide text-white shadow-sm"
+        >
+          Course
+        </span>
 
         <h1 class="text-2xl font-black leading-tight tracking-tight text-text-main sm:text-3xl">
-          {{c.name}}
+          {{ c.name }}
         </h1>
 
         <p class="mt-3 text-sm leading-relaxed text-text-secondary">
-          {{c.description}}
+          {{ c.description }}
         </p>
 
         <dl class="mt-6 grid grid-cols-2 gap-3">
           <div class="flex items-center gap-3 rounded-xl border border-border bg-surface p-4">
-          <span class="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-primary-light text-primary">
-            <svg lucideClock [size]="20" [strokeWidth]="1.5"></svg>
-          </span>
+            <span class="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-primary-light text-primary">
+              <svg lucideClock [size]="20" [strokeWidth]="1.5"></svg>
+            </span>
             <div>
               <dt class="text-xs text-text-secondary">Duration</dt>
-              <dd class="text-base font-bold text-text-main">{{c.totalHours}}</dd>
+              <dd class="text-base font-bold text-text-main">{{ c.totalHours }} hrs</dd>
             </div>
           </div>
 
           <div class="flex items-center gap-3 rounded-xl border border-border bg-surface p-4">
-          <span class="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-primary-light text-primary">
-            <svg lucidePlayCircle [size]="20" [strokeWidth]="1.5"></svg>
-          </span>
+            <span class="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-primary-light text-primary">
+              <svg lucideCirclePlay [size]="20" [strokeWidth]="1.5"></svg>
+            </span>
             <div>
               <dt class="text-xs text-text-secondary">Lessons</dt>
-              <dd class="text-base font-bold text-text-main">{{c.totalVideos}} videos</dd>
+              <dd class="text-base font-bold text-text-main">{{ c.totalVideos }} videos</dd>
             </div>
           </div>
         </dl>
@@ -80,7 +101,9 @@
         <div class="mt-6 flex flex-col gap-3 sm:flex-row">
           <button
             type="button"
-            class="inline-flex flex-1 items-center justify-center gap-2 rounded-xl bg-primary px-4 py-3 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:shadow-md motion-safe:hover:scale-[1.01] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page"
+            [disabled]="(courseVideos.value() ?? []).length === 0"
+            (click)="play((courseVideos.value() ?? [])[0].videoUrl)"
+            class="inline-flex flex-1 items-center justify-center gap-2 rounded-xl bg-primary px-4 py-3 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:shadow-md motion-safe:hover:scale-[1.01] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page disabled:cursor-not-allowed disabled:opacity-60"
           >
             <svg lucidePlay [size]="18" [strokeWidth]="2"></svg>
             <span>Start learning</span>
@@ -101,52 +124,95 @@
     <section class="mt-10 lg:mt-12">
       <h2 class="text-lg font-bold text-text-main">About this course</h2>
       <p class="mt-3 max-w-3xl text-sm leading-relaxed text-text-secondary">
-        This course takes you through the full lifecycle of a production Angular application. You'll
-        structure features with Clean Architecture, model state with signals, and connect a typed HTTP
-        layer without leaking backend concerns into your domain. Each module ends with a hands-on
-        refactor so the patterns stick.
+        {{ c.description }}
       </p>
     </section>
 
     <!-- Curriculum -->
     <section class="mt-10">
-      <h2 class="mb-4 text-lg font-bold text-text-main">Course content</h2>
-      <ul class="divide-y divide-border overflow-hidden rounded-2xl border border-border bg-surface">
-        <li class="flex items-center gap-4 p-4 transition-colors hover:bg-primary-light/60">
-        <span class="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-primary-light text-primary">
-          <svg lucidePlayCircle [size]="18" [strokeWidth]="1.5"></svg>
+      <header class="mb-4 flex items-center justify-between gap-3">
+        <h2 class="text-lg font-bold text-text-main">Course content</h2>
+        <span class="text-sm text-text-secondary">
+          {{ (courseVideos.value() ?? []).length }} videos
         </span>
-          <div class="min-w-0 flex-1">
-            <p class="truncate text-sm font-semibold text-text-main">Introduction & project setup</p>
-            <p class="text-xs text-text-secondary">6 lessons</p>
-          </div>
-          <span class="shrink-0 text-xs font-medium text-text-secondary">1h 12m</span>
-        </li>
+      </header>
 
-        <li class="flex items-center gap-4 p-4 transition-colors hover:bg-primary-light/60">
-        <span class="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-primary-light text-primary">
-          <svg lucidePlayCircle [size]="18" [strokeWidth]="1.5"></svg>
-        </span>
-          <div class="min-w-0 flex-1">
-            <p class="truncate text-sm font-semibold text-text-main">Clean Architecture by feature</p>
-            <p class="text-xs text-text-secondary">9 lessons</p>
-          </div>
-          <span class="shrink-0 text-xs font-medium text-text-secondary">3h 05m</span>
-        </li>
+      @if (courseVideos.isLoading()) {
+        <ul class="space-y-2">
+          @for (i of [1, 2, 3]; track i) {
+            <li class="flex items-center gap-4 rounded-2xl border border-border bg-surface p-4">
+              <span class="h-9 w-9 shrink-0 rounded-lg bg-border motion-safe:animate-pulse"></span>
+              <span class="h-3 w-1/2 rounded-full bg-border motion-safe:animate-pulse"></span>
+            </li>
+          }
+        </ul>
+      } @else if (courseVideos.error()) {
+        <app-error-state class="block" />
+      } @else {
+        <ul class="divide-y divide-border overflow-hidden rounded-2xl border border-border bg-surface">
+          @for (cv of courseVideos.value() ?? []; track cv.courseVideoId; let i = $index) {
+            <li>
+              <button
+                type="button"
+                (click)="play(cv.videoUrl)"
+                [class.bg-primary-light]="selectedVideoUrl() === cv.videoUrl"
+                class="flex w-full items-center gap-4 p-4 text-left transition-colors hover:bg-primary-light/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary/40"
+              >
+                <span class="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-primary-light text-primary">
+                  <svg lucideCirclePlay [size]="18" [strokeWidth]="1.5"></svg>
+                </span>
+                <div class="min-w-0 flex-1">
+                  <p class="truncate text-sm font-semibold text-text-main">{{ cv.videoTitle }}</p>
+                  <p class="text-xs text-text-secondary">Lesson {{ i + 1 }}</p>
+                </div>
+                @if (selectedVideoUrl() === cv.videoUrl) {
+                  <span class="shrink-0 text-xs font-semibold text-primary">Now playing</span>
+                } @else {
+                  <svg lucidePlay [size]="16" [strokeWidth]="2" class="shrink-0 text-text-secondary"></svg>
+                }
+              </button>
+            </li>
+          } @empty {
+            <li class="p-2">
+              <app-empty-state
+                title="No videos yet"
+                message="Add the first video to this course below."
+                class="block" />
+            </li>
+          }
+        </ul>
+      }
 
-        <li class="flex items-center gap-4 p-4 transition-colors hover:bg-primary-light/60">
-        <span class="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-primary-light text-primary">
-          <svg lucidePlayCircle [size]="18" [strokeWidth]="1.5"></svg>
-        </span>
-          <div class="min-w-0 flex-1">
-            <p class="truncate text-sm font-semibold text-text-main">Signals & state management</p>
-            <p class="text-xs text-text-secondary">11 lessons</p>
-          </div>
-          <span class="shrink-0 text-xs font-medium text-text-secondary">4h 20m</span>
-        </li>
-      </ul>
+      <!-- Add video -->
+      <div class="mt-4 rounded-2xl border border-border bg-surface p-5">
+        <label for="add-video" class="mb-2 block text-sm font-semibold text-text-main">
+          Add a video
+        </label>
+        <div class="flex flex-col gap-3 sm:flex-row">
+          <select
+            id="add-video"
+            (change)="videoToAdd.set(+$any($event.target).value)"
+            class="w-full flex-1 rounded-xl border border-border bg-bg-page px-4 py-3 text-sm text-text-main transition-colors duration-200 focus:border-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/30"
+          >
+            <option [value]="null">Select a video…</option>
+            @for (v of videosStore.videos(); track v.id) {
+              <option [value]="v.id">{{ v.title }}</option>
+            }
+          </select>
+          <button
+            type="button"
+            (click)="addVideo()"
+            [disabled]="videoToAdd() === null"
+            class="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl bg-primary px-4 py-3 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:shadow-md motion-safe:hover:scale-[1.01] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            <svg lucidePlus [size]="18" [strokeWidth]="2"></svg>
+            <span>Add video</span>
+          </button>
+        </div>
+      </div>
     </section>
   </main>
+
   <app-confirm-dialog
     [open]="confirmOpen()"
     [loading]="deleting()"
