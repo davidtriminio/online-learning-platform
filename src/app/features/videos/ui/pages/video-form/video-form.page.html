@@ -1,0 +1,201 @@
+<main class="mx-auto w-full max-w-5xl px-5 py-8 sm:px-8 lg:py-10">
+  <nav class="mb-6">
+    <a
+      routerLink="/videos"
+      class="inline-flex items-center gap-1.5 text-sm font-semibold text-text-secondary transition-colors hover:text-primary focus-visible:outline-none focus-visible:underline"
+    >
+      <svg lucideArrowLeft [size]="18" [strokeWidth]="2"></svg>
+      <span>Back to videos</span>
+    </a>
+  </nav>
+
+  <header class="mb-6">
+    <h1 class="text-2xl font-black tracking-tight text-text-main sm:text-3xl">
+      {{ isEdit() ? 'Edit Video' : 'New video' }}
+    </h1>
+    <p class="mt-1 text-sm text-text-secondary">Fill in the details to add a video.</p>
+  </header>
+
+  <form
+    class="grid grid-cols-1 gap-6 lg:grid-cols-[1.5fr_1fr]"
+    novalidate
+    (submit)="$event.preventDefault(); onSubmit()"
+  >
+    @if (saveError()) {
+      <div
+        role="alert"
+        class="flex items-start gap-3 rounded-xl border border-danger/30 bg-danger/10 px-4 py-3 text-sm text-danger lg:col-span-2"
+      >
+        <svg lucideCircleAlert [size]="18" [strokeWidth]="2" class="mt-0.5 shrink-0"></svg>
+        <div>
+          <p class="font-semibold">We couldn't save this video</p>
+          <p class="mt-0.5 text-danger/80">{{ saveError() }}</p>
+        </div>
+      </div>
+    }
+
+    <!-- Main fields -->
+    <section class="space-y-5 rounded-2xl border border-border bg-surface p-5 sm:p-6">
+      <div>
+        <label for="title" class="mb-1.5 block text-sm font-semibold text-text-main">Title</label>
+        <input
+          id="title"
+          [formField]="videoForm.title"
+          type="text"
+          placeholder="e.g. Getting started with signals"
+          class="w-full rounded-xl border border-border bg-bg-page px-4 py-3 text-sm text-text-main placeholder:text-text-secondary transition-colors duration-200 focus:border-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/30"
+        />
+        @if (videoForm.title().touched() && videoForm.title().invalid()) {
+          <p id="title-error" class="mt-1.5 flex items-center gap-1.5 text-xs text-danger">
+            @for (error of videoForm.title().errors(); track error.kind) {
+              <svg lucideCircleAlert class="h-3.5 w-3.5"></svg>
+              {{ error.message }}
+            }
+          </p>
+        }
+      </div>
+
+      <div>
+        <label for="url" class="mb-1.5 block text-sm font-semibold text-text-main">Video URL</label>
+        <div class="relative">
+          <svg
+            lucideLink
+            [size]="18"
+            [strokeWidth]="1.5"
+            class="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-text-secondary"
+          ></svg>
+          <input
+            id="url"
+            [formField]="videoForm.url"
+            type="url"
+            placeholder="https://youtube.com/watch?v=…"
+            class="w-full rounded-xl border border-border bg-bg-page py-3 pl-11 pr-4 text-sm text-text-main placeholder:text-text-secondary transition-colors duration-200 focus:border-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/30"
+          />
+        </div>
+        @if (videoForm.url().touched() && videoForm.url().invalid()) {
+          <p id="url-error" class="mt-1.5 flex items-center gap-1.5 text-xs text-danger">
+            @for (error of videoForm.url().errors(); track error.kind) {
+              <svg lucideCircleAlert class="h-3.5 w-3.5"></svg>
+              {{ error.message }}
+            }
+          </p>
+        }
+      </div>
+
+      <div>
+        <label for="description" class="mb-1.5 block text-sm font-semibold text-text-main">
+          Description
+        </label>
+        <textarea
+          id="description"
+          [formField]="videoForm.description"
+          rows="5"
+          placeholder="What is this video about?"
+          class="w-full resize-y rounded-xl border border-border bg-bg-page px-4 py-3 text-sm text-text-main placeholder:text-text-secondary transition-colors duration-200 focus:border-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/30"
+        ></textarea>
+        @if (videoForm.description().touched() && videoForm.description().invalid()) {
+          <p id="description-error" class="mt-1.5 flex items-center gap-1.5 text-xs text-danger">
+            @for (error of videoForm.description().errors(); track error.kind) {
+              <svg lucideCircleAlert class="h-3.5 w-3.5"></svg>
+              {{ error.message }}
+            }
+          </p>
+        }
+      </div>
+
+      <div>
+        <label for="duration" class="mb-1.5 block text-sm font-semibold text-text-main">
+          Duration
+        </label>
+        <div class="relative">
+          <svg
+            lucideClock12
+            [size]="18"
+            [strokeWidth]="1.5"
+            class="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-text-secondary"
+          ></svg>
+          <input
+            id="duration"
+            [formField]="videoForm.duration"
+            type="text"
+            placeholder="e.g. 12:45"
+            class="w-full rounded-xl border border-border bg-bg-page py-3 pl-11 pr-4 text-sm text-text-main placeholder:text-text-secondary transition-colors duration-200 focus:border-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/30"
+          />
+        </div>
+        @if (videoForm.duration().touched() && videoForm.duration().invalid()) {
+          <p id="duration-error" class="mt-1.5 flex items-center gap-1.5 text-xs text-danger">
+            @for (error of videoForm.duration().errors(); track error.kind) {
+              <svg lucideCircleAlert class="h-3.5 w-3.5"></svg>
+              {{ error.message }}
+            }
+          </p>
+        }
+      </div>
+    </section>
+
+    <!-- Thumbnail + actions -->
+    <aside class="space-y-5">
+      <section class="rounded-2xl border border-border bg-surface p-5 sm:p-6">
+        <h2 class="mb-3 text-sm font-semibold text-text-main">Thumbnail</h2>
+
+        <div class="overflow-hidden rounded-xl border border-border bg-primary-light">
+          <img
+            [src]="videoForm.thumbnail().value() || '/assets/placeholder-course.jpg'"
+            [alt]="videoForm.title().value() || 'Video thumbnail preview'"
+            class="aspect-video w-full object-cover"
+          />
+        </div>
+
+        <label for="thumbnail" class="mb-1.5 mt-4 block text-sm font-semibold text-text-main">
+          Thumbnail URL
+        </label>
+        <div class="relative">
+          <svg
+            lucideImageDown
+            [size]="18"
+            [strokeWidth]="1.5"
+            class="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-text-secondary"
+          ></svg>
+          <input
+            id="thumbnail"
+            [formField]="videoForm.thumbnail"
+            type="url"
+            placeholder="https://…/cover.jpg"
+            class="w-full rounded-xl border border-border bg-bg-page py-3 pl-11 pr-4 text-sm text-text-main placeholder:text-text-secondary transition-colors duration-200 focus:border-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/30"
+          />
+        </div>
+        @if (videoForm.thumbnail().touched() && videoForm.thumbnail().invalid()) {
+          <p id="thumbnail-error" class="mt-1.5 flex items-center gap-1.5 text-xs text-danger">
+            @for (error of videoForm.thumbnail().errors(); track error.kind) {
+              <svg lucideCircleAlert class="h-3.5 w-3.5"></svg>
+              {{ error.message }}
+            }
+          </p>
+        }
+      </section>
+
+      <div class="flex flex-col gap-3">
+        <button
+          type="submit"
+          [disabled]="submitting()"
+          class="inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-4 py-3 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:shadow-md motion-safe:hover:scale-[1.01] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page disabled:cursor-not-allowed disabled:opacity-60"
+        >
+          @if (submitting()) {
+            <svg lucideLoaderCircle class="h-5 w-5 motion-safe:animate-spin"></svg>
+            <span>Saving…</span>
+          } @else {
+            <span>Save video</span>
+            <svg lucideCheck [size]="18" [strokeWidth]="2" class="h-5 w-5"></svg>
+          }
+        </button>
+
+        <a
+          routerLink="/videos"
+          class="inline-flex items-center justify-center gap-2 rounded-xl border border-border bg-surface px-4 py-3 text-sm font-semibold text-text-main shadow-sm transition-colors duration-200 hover:bg-primary-light hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page"
+        >
+          Cancel
+        </a>
+      </div>
+    </aside>
+  </form>
+</main>
