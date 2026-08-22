@@ -12,7 +12,7 @@ import { Router, RouterLink } from '@angular/router'
 import { CoursesStore } from '../../../application/courses.store'
 import {
   LucideArrowLeft,
-  LucideBookmark,
+  LucideBookmark, LucideCircleAlert,
   LucideCirclePlay,
   LucideClock,
   LucidePencil,
@@ -48,6 +48,7 @@ import { Button } from '../../../../../shared/ui/button/button/button'
     VideoPlayerComponent,
     ErrorState,
     Button,
+    LucideCircleAlert,
   ],
   templateUrl: './course-detail.page.html',
 })
@@ -70,6 +71,12 @@ export class CourseDetailPage {
     stream: ({ params }) => this.courseVideoRepo.byCourseId(params),
   })
 
+  // Filter Picker
+  protected readonly availableVideos = computed(() => {
+    const linked = new Set((this.courseVideos.value() ?? []).map((cv) => cv.videoId))
+    return this.videosStore.videos().filter((v) => !linked.has(v.id))
+  })
+
   protected readonly selectedVideoUrl = signal<string | null>(null)
   protected readonly videoToAdd = signal<number | null>(null)
 
@@ -77,6 +84,8 @@ export class CourseDetailPage {
   protected readonly confirmOpen = signal(false)
   protected readonly deleting = signal(false)
   protected readonly deleteError = signal<string | null>(null)
+
+  protected readonly addError = signal<string | null>(null)
 
   constructor() {
     effect(() => {
@@ -103,7 +112,13 @@ export class CourseDetailPage {
     this.courseVideoRepo
       .addToCourse(this.id(), videoId)
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => this.courseVideos.reload())
+      .subscribe({
+        next: () => {
+          this.videoToAdd.set(null)
+          this.courseVideos.reload()
+        },
+        error: (e: Error) => this.addError.set(e.message),
+      })
   }
 
   protected openConfirm(): void {
