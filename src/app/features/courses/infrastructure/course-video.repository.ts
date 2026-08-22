@@ -27,7 +27,12 @@ export class CourseVideoRepository {
         courseId,
         videoId,
       })
-      .pipe(map(() => undefined))
+      .pipe(
+        map((res) => {
+          if (!res.result) throw new Error(res.message || 'Could not add the video.')
+          return undefined
+        }),
+      )
   }
 
   removeFromCourse(courseVideoId: number): Observable<void> {
