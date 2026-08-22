@@ -21,4 +21,10 @@ export const routes: Routes = [
     canActivate: [authGuard],
     loadChildren: () => import('./features/videos/videos.routes').then((m) => m.videosRoutes),
   },
+  {
+    path: 'my-courses',
+    canActivate: [authGuard],
+    loadChildren: () =>
+      import('./features/enrollments/enrollments.routes').then((m) => m.enrollmentsRoutes),
+  },
 ]
