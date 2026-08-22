@@ -1,0 +1,109 @@
+<main class="mx-auto w-full max-w-7xl px-5 py-8 sm:px-8 lg:py-10">
+  <header class="mb-6 sm:mb-8">
+    <h1 class="text-2xl font-black tracking-tight text-text-main sm:text-3xl">My courses</h1>
+    <p class="mt-1 text-sm text-text-secondary">Courses you're enrolled in.</p>
+  </header>
+
+  @if (isLoading()) {
+    <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      @for (i of [1, 2, 3]; track i) {
+        <app-card-skeleton />
+      }
+    </div>
+  } @else if (hasError()) {
+    <app-error-state class="block" />
+  } @else if (myCourses().length === 0) {
+    <app-empty-state
+      title="No enrolled courses yet."
+      message="Browse the catalog and enroll to start learning."
+      actionLabel="Browse courses"
+      [actionLink]="['/courses']"
+      class="block" />
+  } @else {
+    <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      @for (item of myCourses(); track item.enrollment.id) {
+        <article
+          class="group flex h-full flex-col overflow-hidden rounded-2xl border border-border bg-surface shadow-sm transition-all duration-200 ease-in-out hover:shadow-md motion-safe:hover:-translate-y-1"
+        >
+          <!-- Thumbnail -->
+          <div class="relative aspect-video w-full overflow-hidden bg-primary-light">
+            <img
+              [src]="item.course.thumbnailUrl"
+              [alt]="item.course.name"
+              loading="lazy"
+              class="h-full w-full object-cover transition-transform duration-300 ease-out motion-safe:group-hover:scale-105"
+            />
+
+            @if (item.enrollment.isCompleted) {
+              <span
+                class="absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-full bg-primary px-3 py-1 text-xs font-semibold uppercase tracking-wide text-white shadow-sm"
+              >
+                <svg lucideCircleCheck [size]="14" [strokeWidth]="2"></svg>
+                <span>Completed</span>
+              </span>
+            } @else {
+              <span
+                class="absolute left-3 top-3 rounded-full bg-surface/90 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-text-secondary shadow-sm backdrop-blur-sm"
+              >
+                In progress
+              </span>
+            }
+          </div>
+
+          <!-- Body -->
+          <div class="flex flex-1 flex-col gap-2 p-5">
+            <h3 class="line-clamp-2 text-base font-bold leading-snug text-text-main">
+              {{ item.course.name }}
+            </h3>
+
+            <p class="line-clamp-2 text-sm leading-relaxed text-text-secondary">
+              {{ item.course.description }}
+            </p>
+
+            <!-- Meta row -->
+            <div class="mt-auto flex items-center gap-2 border-t border-border pt-4">
+              <span class="inline-flex items-center gap-1.5 text-sm text-text-secondary">
+                <svg lucideCalendar [size]="16" [strokeWidth]="1.5" class="text-primary"></svg>
+                <span>Enrolled</span>
+                <span class="font-medium text-text-main">
+                  {{ item.enrollment.enrolledDate | date: 'mediumDate' }}
+                </span>
+              </span>
+            </div>
+
+            <!-- Actions -->
+            <div class="mt-4 flex items-center gap-2">
+              <a
+                [routerLink]="['/courses', item.course.id]"
+                class="inline-flex flex-1 items-center justify-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:shadow-md motion-safe:hover:scale-[1.01] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page"
+              >
+                <span>Open</span>
+                <svg lucideArrowRight [size]="16" [strokeWidth]="2"></svg>
+              </a>
+
+              <button
+                type="button"
+                (click)="openConfirm(item.enrollment.id)"
+                class="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl border border-border bg-surface px-4 py-2.5 text-sm font-semibold text-danger transition-all duration-200 hover:border-danger/40 hover:bg-danger/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-danger/40 focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page"
+              >
+                <svg lucideTrash2 [size]="16" [strokeWidth]="1.5"></svg>
+                <span>Remove</span>
+              </button>
+            </div>
+          </div>
+        </article>
+      }
+    </div>
+  }
+</main>
+
+<app-confirm-dialog
+  [open]="confirmOpen()"
+  title="Remove enrollment?"
+  message="You will lose this course from your list."
+  confirmLabel="Remove"
+  [loading]="removing()"
+  [error]="removeError()"
+  (confirm)="onRemove()"
+  (cancel)="closeConfirm()"
+/>
