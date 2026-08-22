@@ -30,7 +30,7 @@ export class CourseVideoRepository {
       .pipe(map(() => undefined))
   }
 
-  removerFromCourse(courseVideoId: number): Observable<void> {
+  removeFromCourse(courseVideoId: number): Observable<void> {
     return this.http
       .delete(
         `${this.baseUrl}${COURSE_VIDEO_ENDPOINTS.removeFromCourse}?courseVideoId=${courseVideoId}`,
