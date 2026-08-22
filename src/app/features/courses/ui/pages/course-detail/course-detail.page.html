@@ -47,21 +47,24 @@
             class="inline-flex items-center gap-1.5 rounded-lg border border-border bg-surface px-2.5 py-1.5 text-xs font-semibold text-text-secondary transition-colors hover:bg-primary-light hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
           >
             <svg lucideX [size]="14" [strokeWidth]="2"></svg>
-            <span>Close</span>
+            <span>Close video</span>
           </button>
         </div>
-        <app-video-player [src]="url" />
       </section>
     }
 
     <div class="grid grid-cols-1 gap-8 lg:grid-cols-[1.4fr_1fr] lg:gap-10">
       <!-- Thumbnail -->
       <figure class="overflow-hidden rounded-2xl border border-border bg-primary-light shadow-sm">
-        <img
-          [src]="c.thumbnailUrl"
-          [alt]="c.name"
-          class="aspect-video w-full object-cover"
-        />
+        @if (selectedVideoUrl(); as url) {
+          <app-video-player [src]="url" />
+        } @else {
+          <img
+            [src]="c.thumbnailUrl"
+            [alt]="c.name"
+            class="aspect-video w-full object-cover"
+          />
+        }
       </figure>
 
       <!-- Summary / CTA -->
