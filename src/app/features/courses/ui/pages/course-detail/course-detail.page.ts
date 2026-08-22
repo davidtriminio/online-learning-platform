@@ -29,6 +29,8 @@ import { VideosStore } from '../../../../videos/application/videos.store'
 import { rxResource, takeUntilDestroyed } from '@angular/core/rxjs-interop'
 import { VideoPlayerComponent } from '../../../../videos/ui/components/video-player/video-player.component'
 import { Button } from '../../../../../shared/ui/button/button/button'
+import { AuthStore } from '../../../../auth/application/auth.store'
+import { EnrollmentsStore } from '../../../../enrollments/application/enrollments.store'
 
 @Component({
   selector: 'app-course-detail',
@@ -55,6 +57,17 @@ import { Button } from '../../../../../shared/ui/button/button/button'
 export class CourseDetailPage {
   private router = inject(Router)
   private destroyRef = inject(DestroyRef)
+
+  private readonly auth = inject(AuthStore)
+  private readonly enrollments = inject(EnrollmentsStore)
+
+  protected readonly isEnrolled = computed(() =>
+    this.enrollments.enrollmentByCourseId().has(this.id())
+  )
+
+  protected readonly enrolling = signal(false)
+  protected readonly enrollError = signal<string | null>(null)
+
   private readonly store = inject(CoursesStore)
   protected readonly isLoading = this.store.isLoading
   protected readonly hasError = this.store.hasError
@@ -88,6 +101,20 @@ export class CourseDetailPage {
   protected readonly addError = signal<string | null>(null)
 
   constructor() {
+    const userId = this.auth.user()?.id
+    if(userId != null) this.enrollments.loadByUser(userId)
+
+    effect(() => {
+      if (!this.enrolling()) return
+      const status = this.enrollments.status()
+      if (status === 'idle'){
+        this.enrolling.set(false)
+      } else if (status === 'error'){
+        this.enrolling.set(false)
+        this.enrollError.set('Enrollment failed. Please try again.')
+      }
+    })
+
     effect(() => {
       if (!this.deleting()) return
       const status = this.store.status()
@@ -100,6 +127,22 @@ export class CourseDetailPage {
         this.deleteError.set('Failed to delete the course. Please try again.')
       }
     })
+  }
+
+  protected enroll(): void{
+    const userId = this.auth.user()?.id
+    if (userId == null) return
+    this.enrollError.set(null)
+    this.enrolling.set(true)
+    this.enrollments.enroll({userId, courseId: this.id()})
+  }
+
+  protected unenroll(): void {
+    const enrollment = this.enrollments.enrollmentByCourseId().get(this.id())
+    if (!enrollment) return
+    this.enrollError.set(null)
+    this.enrolling.set(true)
+    this.enrollments.unenroll(enrollment.id)
   }
 
   protected play(url: string): void {
