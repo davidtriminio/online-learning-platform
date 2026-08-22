@@ -28,6 +28,7 @@ import { CourseVideoRepository } from '../../../infrastructure/course-video.repo
 import { VideosStore } from '../../../../videos/application/videos.store'
 import { rxResource, takeUntilDestroyed } from '@angular/core/rxjs-interop'
 import { VideoPlayerComponent } from '../../../../videos/ui/components/video-player/video-player.component'
+import { Button } from '../../../../../shared/ui/button/button/button'
 
 @Component({
   selector: 'app-course-detail',
@@ -46,6 +47,7 @@ import { VideoPlayerComponent } from '../../../../videos/ui/components/video-pla
     ConfirmDialog,
     VideoPlayerComponent,
     ErrorState,
+    Button,
   ],
   templateUrl: './course-detail.page.html',
 })

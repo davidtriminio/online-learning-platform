@@ -3,26 +3,19 @@ import { Router, RouterLink } from '@angular/router'
 import { CoursesStore } from '../../../application/courses.store'
 import { CourseForm, courseSchema } from '../../../application/course.schema'
 import { form, FormField } from '@angular/forms/signals'
-import {
-  LucideArrowLeft,
-  LucideCheck,
-  LucideCircleAlert,
-  LucideClock,
-  LucideImage,
-  LucideLoaderCircle,
-} from '@lucide/angular'
+import { LucideArrowLeft, LucideCircleAlert, LucideClock, LucideImage } from '@lucide/angular'
+import { Button } from '../../../../../shared/ui/button/button/button'
 
 @Component({
   selector: 'app-course-form',
   imports: [
     FormField,
-    LucideCheck,
     LucideArrowLeft,
     LucideClock,
     LucideCircleAlert,
     LucideImage,
     RouterLink,
-    LucideLoaderCircle,
+    Button,
   ],
   templateUrl: './course-form.page.html',
 })
@@ -32,7 +25,7 @@ export class CourseFormPage {
 
   readonly id = input(undefined, { transform: numberAttribute })
 
-  protected readonly isEdit = computed(() =>{
+  protected readonly isEdit = computed(() => {
     const id = this.id()
     return id !== undefined && !Number.isNaN(id)
   })
