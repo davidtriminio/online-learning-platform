@@ -5,6 +5,7 @@ import { CourseForm, courseSchema } from '../../../application/course.schema'
 import { form, FormField } from '@angular/forms/signals'
 import { LucideArrowLeft, LucideCircleAlert, LucideClock, LucideImage } from '@lucide/angular'
 import { Button } from '../../../../../shared/ui/button/button/button'
+import { BackDirective } from '../../../../../shared/directives/back.directive'
 
 @Component({
   selector: 'app-course-form',
@@ -14,8 +15,8 @@ import { Button } from '../../../../../shared/ui/button/button/button'
     LucideClock,
     LucideCircleAlert,
     LucideImage,
-    RouterLink,
     Button,
+    BackDirective,
   ],
   templateUrl: './course-form.page.html',
 })

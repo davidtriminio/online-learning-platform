@@ -190,7 +190,7 @@
             class="w-full flex-1 rounded-xl border border-border bg-bg-page px-4 py-3 text-sm text-text-main transition-colors duration-200 focus:border-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/30"
           >
             <option [value]="null">Select a video…</option>
-            @for (v of videosStore.videos(); track v.id) {
+            @for (v of availableVideos(); track v.id) {
               <option [value]="v.id">{{ v.title }}</option>
             }
           </select>
@@ -206,6 +206,15 @@
           </button>
         </div>
       </div>
+      @if (addError()) {
+        <div
+          role="alert"
+          class="mb-6 mt-2 flex items-start gap-3 rounded-xl border border-danger/30 bg-danger/10 px-4 py-3 text-sm text-danger"
+        >
+          <svg lucideAlertCircle class="mt-0.5 h-4 w-4 shrink-0"></svg>
+          <span>{{ addError() }}</span>
+        </div>
+      }
     </section>
   </main>
 

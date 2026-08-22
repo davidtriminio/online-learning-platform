@@ -27,10 +27,15 @@ export class CourseVideoRepository {
         courseId,
         videoId,
       })
-      .pipe(map(() => undefined))
+      .pipe(
+        map((res) => {
+          if (!res.result) throw new Error(res.message || 'Could not add the video.')
+          return undefined
+        }),
+      )
   }
 
-  removerFromCourse(courseVideoId: number): Observable<void> {
+  removeFromCourse(courseVideoId: number): Observable<void> {
     return this.http
       .delete(
         `${this.baseUrl}${COURSE_VIDEO_ENDPOINTS.removeFromCourse}?courseVideoId=${courseVideoId}`,
