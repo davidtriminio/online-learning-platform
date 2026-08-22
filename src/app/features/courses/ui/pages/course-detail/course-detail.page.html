@@ -165,11 +165,6 @@
                 <p class="truncate text-sm font-semibold text-text-main">{{ cv.videoTitle }}</p>
                 <p class="text-xs text-text-secondary">Lesson {{ i + 1 }}</p>
               </div>
-              @if (selectedVideoUrl() === cv.videoUrl) {
-                <span class="shrink-0 text-xs font-semibold text-primary">Now playing</span>
-              } @else {
-                <svg lucidePlay [size]="16" [strokeWidth]="2" class="shrink-0 text-text-secondary"></svg>
-              }
             </button>
           </li>
         } @empty {
