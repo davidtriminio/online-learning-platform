@@ -12,7 +12,9 @@ import { Router, RouterLink } from '@angular/router'
 import { CoursesStore } from '../../../application/courses.store'
 import {
   LucideArrowLeft,
-  LucideBookmark, LucideCircleAlert,
+  LucideBookmark,
+  LucideCircleAlert,
+  LucideCircleCheck,
   LucideCirclePlay,
   LucideClock,
   LucidePencil,
@@ -31,6 +33,8 @@ import { VideoPlayerComponent } from '../../../../videos/ui/components/video-pla
 import { Button } from '../../../../../shared/ui/button/button/button'
 import { AuthStore } from '../../../../auth/application/auth.store'
 import { EnrollmentsStore } from '../../../../enrollments/application/enrollments.store'
+import { ProgressStore } from '../../../../progress/application/progress.store'
+import { CourseVideo } from '../../../domain/course-video.model'
 
 @Component({
   selector: 'app-course-detail',
@@ -51,6 +55,7 @@ import { EnrollmentsStore } from '../../../../enrollments/application/enrollment
     ErrorState,
     Button,
     LucideCircleAlert,
+    LucideCircleCheck,
   ],
   templateUrl: './course-detail.page.html',
 })
@@ -62,11 +67,13 @@ export class CourseDetailPage {
   private readonly enrollments = inject(EnrollmentsStore)
 
   protected readonly isEnrolled = computed(() =>
-    this.enrollments.enrollmentByCourseId().has(this.id())
+    this.enrollments.enrollmentByCourseId().has(this.id()),
   )
 
   protected readonly enrolling = signal(false)
   protected readonly enrollError = signal<string | null>(null)
+
+  protected readonly progress = inject(ProgressStore)
 
   private readonly store = inject(CoursesStore)
   protected readonly isLoading = this.store.isLoading
@@ -100,16 +107,33 @@ export class CourseDetailPage {
 
   protected readonly addError = signal<string | null>(null)
 
+  protected readonly enrollmentId = computed(
+    () => this.enrollments.enrollmentByCourseId().get(this.id())?.id ?? null,
+  )
+
+  protected readonly coursePercent = computed(() => {
+    const vids = this.courseVideos.value() ?? []
+    if (vids.length === 0) return 0
+    const done = this.progress.completeVideoIds()
+    const c = vids.filter((v) => done.has(v.videoId)).length
+    return Math.round((c / vids.length) * 100)
+  })
+
   constructor() {
     const userId = this.auth.user()?.id
-    if(userId != null) this.enrollments.loadByUser(userId)
+    if (userId != null) this.enrollments.loadByUser(userId)
+
+    effect(() => {
+      const eid = this.enrollmentId()
+      if (eid != null) this.progress.loadByEnrollment(eid)
+    })
 
     effect(() => {
       if (!this.enrolling()) return
       const status = this.enrollments.status()
-      if (status === 'idle'){
+      if (status === 'idle') {
         this.enrolling.set(false)
-      } else if (status === 'error'){
+      } else if (status === 'error') {
         this.enrolling.set(false)
         this.enrollError.set('Enrollment failed. Please try again.')
       }
@@ -129,12 +153,12 @@ export class CourseDetailPage {
     })
   }
 
-  protected enroll(): void{
+  protected enroll(): void {
     const userId = this.auth.user()?.id
     if (userId == null) return
     this.enrollError.set(null)
     this.enrolling.set(true)
-    this.enrollments.enroll({userId, courseId: this.id()})
+    this.enrollments.enroll({ userId, courseId: this.id() })
   }
 
   protected unenroll(): void {
@@ -145,8 +169,20 @@ export class CourseDetailPage {
     this.enrollments.unenroll(enrollment.id)
   }
 
-  protected play(url: string): void {
-    this.selectedVideoUrl.set(url)
+  protected play(video: CourseVideo): void {
+    this.selectedVideoUrl.set(video.videoUrl)
+    const eid = this.enrollmentId()
+    if (eid != null) this.progress.start({ enrollmentId: eid, videoId: video.videoId })
+  }
+
+  protected startLearning(): void {
+    const first = (this.courseVideos.value() ?? [])[0]
+    if (first) this.play(first)
+  }
+
+  protected markComplete(videoId: number): void{
+    const eid = this.enrollmentId()
+    if (eid != null) this.progress.complete({enrollmentId: eid, videoId})
   }
 
   protected addVideo(): void {
