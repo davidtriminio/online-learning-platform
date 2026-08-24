@@ -14,6 +14,11 @@
     </a>
   </header>
 
+  <div class="my-2">
+    <app-course-filter-bar />
+  </div>
+
+
   @if (store.status() === 'loading') {
     <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
       @for (i of [1, 2, 3, 4, 5, 6]; track i) {
@@ -24,15 +29,22 @@
     <app-error-state class="block" />
   } @else {
     <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-      @for (course of store.courses(); track course.id) {
+      @for (course of store.filteredCourses(); track course.id) {
         <app-course-card [course]="course" />
       } @empty {
-        <app-empty-state
-          title="No courses found."
-          message="Create your first course to get started."
-          actionLabel="New Course"
-          actionLink="/courses/new"
-          class="col-span-full block" />
+        @if (store.hasSearch()) {
+          <app-empty-state
+            title="No matches"
+            message="No courses match your search."
+            class="col-span-full block" />
+        } @else {
+          <app-empty-state
+            title="No courses found."
+            message="Create your first course to get started."
+            actionLabel="New Course"
+            actionLink="/courses/new"
+            class="col-span-full block" />
+        }
       }
     </div>
   }
