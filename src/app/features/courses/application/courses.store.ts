@@ -13,17 +13,31 @@ import { CourseRepository } from '../infrastructure/course.repository'
 import { rxMethod } from '@ngrx/signals/rxjs-interop'
 import { catchError, EMPTY, pipe, switchMap, tap } from 'rxjs'
 
-type CoursesState = { status: 'idle' | 'loading' | 'error' }
+const normalize = (s: string) =>
+  s
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+
+type CoursesState = { status: 'idle' | 'loading' | 'error'; searchTerm: string }
 
 export const CoursesStore = signalStore(
   { providedIn: 'root' },
-  withState<CoursesState>({ status: 'idle' }),
+  withState<CoursesState>({ status: 'idle', searchTerm: '' }),
   withEntities<Course>(),
-  withComputed(({ entities, status }) => ({
+  withComputed(({ entities, status, searchTerm }) => ({
     courses: computed(() => entities()),
     total: computed(() => entities().length),
     isLoading: computed(() => status() === 'loading'),
     hasError: computed(() => status() === 'error'),
+    filteredCourses: computed(() => {
+      const term = normalize(searchTerm().trim())
+      if (!term) return entities()
+      return entities().filter(
+        (c) => normalize(c.name).includes(term) || normalize(c.description).includes(term)
+      )
+    }),
+    hasSearch: computed(() => searchTerm().trim().length > 0)
   })),
   withMethods((store, repo = inject(CourseRepository)) => {
     const refresh = rxMethod<void>(
@@ -99,6 +113,9 @@ export const CoursesStore = signalStore(
           ),
         ),
       ),
+      setSearchTerm(term: string){
+        patchState(store, {searchTerm: term})
+      }
     }
   }),
   withHooks({
