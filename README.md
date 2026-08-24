@@ -61,21 +61,30 @@ Secuencia exacta de desarrollo. Utiliza estos checkboxes para trazar el progreso
 - [ ] Extensión del `course-form.component.ts` para soportar `FormArray` dinámico.
 - [ ] Integración del player y la lista de videos en el detalle del curso.
 
-### Fase 4: Telemetría y Progreso (Enrollments)
-- [ ] Servicios y modelos de `Enrollment`.
-- [ ] `resolvers/enrollment.resolver.ts` (Resolución temprana con el ID del `authStore`).
-- [ ] Acción de inscripción directa en `course-detail`.
-- [ ] Implementación del dashboard (`my-courses.component.ts`).
+### Fase 4: Inscripciones (Enrollments) ✅
+- [x] `features/enrollments/domain/enrollment.model.ts` (entidad flaca + `EnrollmentInput`).
+- [x] DTOs por caso de uso: `enrollment-response.dto.ts` (lectura denormalizada/fat) + `enrollment-request.dto.ts` (escritura thin).
+- [x] `enrollment.mapper.ts` (`toEnrollment` descarta denormalización; `toCreateEnrollmentRequestDto` → `enrollmentId:0`, `enrolledDate=now`, `isCompleted:false`).
+- [x] `enrollment.repository.ts` (`getByUserId` con `?userid=`, `create`, `delete` con `?enrollmentId=`).
+- [x] `enrollments.store.ts` (SignalStore: `loadByUser`/`enroll`/`unenroll`, reload-after-mutate, `myCourses` cruzando con `CoursesStore`).
+- [x] Acción inscribir/baja en `course-detail` (doble defensa de unicidad: UI preventiva + surfaceo de `result:false`).
+- [x] Dashboard `my-courses.page` + ruta lazy `/my-courses` (protegida por `authGuard`).
+- [x] Hidratación vía store (sin resolver: el `enrollmentId` no se necesita antes de montar la vista).
 
-### Fase 5: Motor de Progreso Granular
-- [ ] Entidad de `Progress` (Tracking por video).
-- [ ] `features/progress/store/progress.store.ts` (`computed` combinados para % global).
-- [ ] Conexión del `video-player` al store (emisiones debounced de inicio/fin).
-- [ ] Renderizado dinámico de la `progress-bar` (con `@switch`).
+### Fase 5: Motor de Progreso Granular ✅
+- [x] `features/progress/domain/video-progress.model.ts` (tracking por video + `ProgressInput`).
+- [x] DTOs `progress-{response,request}.dto.ts` + `progress.mapper.ts` (`toStartRequestDto` / `toCompleteRequestDto`, reusa `progressId` en complete).
+- [x] `progress.repository.ts` (`getByEnrollmentId`, `start`=addStartProgress, `complete`=addCompleteProgress).
+- [x] `progress.store.ts` (`withEntities`; `loadByEnrollment`, `start` con guarda anti-doble-inicio, `complete` encadena start→complete; upsert con `setEntity`; `completedVideoIds` computed).
+- [x] Conexión al `video-player`: `start` al reproducir, `complete` por botón explícito (universal) + `ended` nativo.
+- [x] `%` de curso **derivado** (cruce `completedVideoIds` ↔ `courseVideos`); "Completed" es solo vista (no persiste en `enrollment.isCompleted` — `UpdateEnrollment` inservible).
 
-### Fase 6: Búsqueda y Filtrado Reactivo (Client-side)
-- [ ] `course-filter-bar.component.ts` (Control de inputs mediante `Subject` + RxJS).
-- [ ] Extensión de `courses.store.ts` para alojar estado temporal (`searchTerm`).
+### Fase 6: Búsqueda y Filtrado Reactivo (Client-side) ✅
+- [x] Extensión de `courses.store.ts`: slice `searchTerm` en `withState` + `setSearchTerm` + `computed` `filteredCourses` (case/acento-insensitive vía `normalize` NFD) y `hasSearch`. El resultado se **deriva**, no se duplica.
+- [x] `ui/components/course-filter-bar` (input controlado `[value]`/`(input)` que inyecta el store y escribe `setSearchTerm`; filtrado instantáneo, sin `Subject`).
+- [x] Deep-linking `?q=` vía Router Input (`withComponentInputBinding`): `effect` URL→store + `rxMethod`/`toObservable` con `debounceTime(300)`+`replaceUrl` store→URL (debounce solo donde gana: no ensuciar el history).
+- [x] Empty-state contextual bifurcado por `hasSearch()` (sin coincidencias ≠ catálogo vacío), reutilizando `shared/ui/empty-state`.
+- [x] Blindaje del Router Input: `input('', { transform: v => v ?? '' })` — param ausente entrega `undefined`, no el default; se coalesce en la frontera.
 
 ### Fase 7: Favoritos (Efectos de estado local)
 - [ ] `favorites.service.ts` (Sincronización con storage vía `effect()`).

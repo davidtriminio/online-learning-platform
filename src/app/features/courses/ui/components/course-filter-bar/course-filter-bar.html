@@ -1,0 +1,36 @@
+<div class="flex flex-col gap-2">
+  <div class="relative">
+    <span
+      class="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-text-secondary"
+    >
+      <svg lucideSearch [size]="18" [strokeWidth]="2" aria-hidden="true"></svg>
+    </span>
+
+    <input
+      type="search"
+      placeholder="Search courses..."
+      [value]="store.searchTerm()"
+      (input)="onInput($event)"
+      aria-label="Search courses"
+      class="w-full rounded-xl border border-border bg-surface py-3 pl-11 pr-11 text-sm text-text-main shadow-sm transition-colors duration-200 placeholder:text-text-secondary focus:border-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/30 [&::-webkit-search-cancel-button]:appearance-none"
+    />
+
+    @if (store.hasSearch()) {
+      <button
+        type="button"
+        (click)="clear()"
+        aria-label="Clear search"
+        class="absolute right-2.5 top-1/2 grid h-8 w-8 -translate-y-1/2 place-items-center rounded-lg text-text-secondary transition-colors hover:bg-primary-light hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
+      >
+        <svg lucideX [size]="16" [strokeWidth]="2" aria-hidden="true"></svg>
+      </button>
+    }
+  </div>
+
+  @if (store.hasSearch()) {
+    <p class="px-1 text-xs text-text-secondary" role="status" aria-live="polite">
+      <span class="font-semibold text-text-main">{{ store.filteredCourses().length }}</span>
+      of {{ store.total() }} courses
+    </p>
+  }
+</div>
