@@ -27,25 +27,21 @@
     </div>
   } @else if (store.status() === 'error') {
     <app-error-state class="block" />
+  } @else if (store.filteredCourses().length === 0) {
+    @if (store.hasSearch()) {
+      <app-empty-state
+        title="No matches"
+        message="No courses martch your search."
+        class="block" />
+    } @else {
+      <app-empty-state
+        title="No courses found."
+        message="Create your first course to get started."
+        actionLabel="New Course"
+        actionLink="/courses/new"
+        class="block" />
+    }
   } @else {
-    <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-      @for (course of store.filteredCourses(); track course.id) {
-        <app-course-card [course]="course" />
-      } @empty {
-        @if (store.hasSearch()) {
-          <app-empty-state
-            title="No matches"
-            message="No courses match your search."
-            class="col-span-full block" />
-        } @else {
-          <app-empty-state
-            title="No courses found."
-            message="Create your first course to get started."
-            actionLabel="New Course"
-            actionLink="/courses/new"
-            class="col-span-full block" />
-        }
-      }
-    </div>
+    <app-course-grid [courses]="store.filteredCourses()" />
   }
 </main>

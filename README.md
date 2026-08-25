@@ -86,9 +86,14 @@ Secuencia exacta de desarrollo. Utiliza estos checkboxes para trazar el progreso
 - [x] Empty-state contextual bifurcado por `hasSearch()` (sin coincidencias ≠ catálogo vacío), reutilizando `shared/ui/empty-state`.
 - [x] Blindaje del Router Input: `input('', { transform: v => v ?? '' })` — param ausente entrega `undefined`, no el default; se coalesce en la frontera.
 
-### Fase 7: Favoritos (Efectos de estado local)
-- [ ] `favorites.service.ts` (Sincronización con storage vía `effect()`).
-- [ ] Integración de UI en tarjetas y detalles.
+### Fase 7: Favoritos (Efectos de estado local) ✅
+- [x] `favorites/infrastructure/favorites-storage.service.ts` (adaptador `localStorage`; key **namespaced por usuario** `ol.favorites.${userId}`; `Set<number>` en memoria ↔ `number[]` serializado; degrada a vacío en `try/catch`).
+- [x] `favorites/application/favorites.store.ts` (servicio `providedIn:'root'` con `signal` — **no** SignalStore: estado cliente sin async; `isFavorite`/`toggle`, `count`, `favoriteCourses` **derivado** cruzando `CoursesStore.entityMap()`).
+- [x] Sincronización bidireccional: `effect` hidrata storage→state reaccionando a `AuthStore.user()` (rehidrata al cambiar de sesión); `toggle` persiste state→storage **explícito** (evita machaque de key en el cambio de usuario y el loop del effect-persist).
+- [x] `favorites/ui/components/favorite-button` (widget corazón: `input courseId`, `lucideHeart` con `fill` conmutado, `aria-pressed`; `stopPropagation`/`preventDefault` para no navegar dentro del `<a>` de la tarjeta).
+- [x] Integración de UI: corazón en `course-card` (sobre el thumbnail) y en `course-detail` (reemplaza el botón "Save" placeholder muerto).
+- [x] `courses/ui/components/course-grid` (presentacional puro `input courses: Course[]` → `@for` de `course-card`); refactor de `course-list` para consumirlo (loading/error/empty se quedan en la página, que sí conoce el contexto).
+- [x] `favorites/ui/pages/favorites` + ruta lazy `/favorites` (protegida por `authGuard`); guardia `isLoading` del catálogo evita falso-vacío mientras `entityMap()` carga.
 
 ### Fase 8: UI/UX Core
 - [ ] Componentes de feedback: `spinner/`, `empty-state/`.

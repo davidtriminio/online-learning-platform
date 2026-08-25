@@ -9,17 +9,18 @@ import { LucidePlus } from '@lucide/angular'
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop'
 import { debounceTime, distinctUntilChanged, skip } from 'rxjs'
 import { CourseFilterBar } from '../../components/course-filter-bar/course-filter-bar'
+import { CourseGrid } from '../../components/course-grid/course-grid'
 
 @Component({
   selector: 'app-course-list',
   imports: [
     RouterLink,
-    CourseCard,
     CardSkeleton,
     ErrorState,
     EmptyState,
     LucidePlus,
     CourseFilterBar,
+    CourseGrid,
   ],
   templateUrl: './course-list.page.html',
 })
