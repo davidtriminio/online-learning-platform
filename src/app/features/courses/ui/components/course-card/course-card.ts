@@ -3,10 +3,18 @@ import { Course } from '../../../domain/course.model'
 import { CardContainer } from '../../../../../shared/ui/card-container/card-container'
 import { LucideArrowRight, LucideCirclePlay, LucideClock } from '@lucide/angular'
 import { RouterLink } from '@angular/router'
+import { FavoriteButton } from '../../../../favorites/ui/components/favorite-button/favorite-button'
 
 @Component({
   selector: 'app-course-card',
-  imports: [CardContainer, LucideClock, LucideCirclePlay, LucideArrowRight, RouterLink],
+  imports: [
+    CardContainer,
+    LucideClock,
+    LucideCirclePlay,
+    LucideArrowRight,
+    RouterLink,
+    FavoriteButton,
+  ],
   templateUrl: './course-card.html',
 })
 export class CourseCard {

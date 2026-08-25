@@ -12,7 +12,6 @@ import { Router, RouterLink } from '@angular/router'
 import { CoursesStore } from '../../../application/courses.store'
 import {
   LucideArrowLeft,
-  LucideBookmark,
   LucideCircleAlert,
   LucideCircleCheck,
   LucideCirclePlay,
@@ -35,6 +34,7 @@ import { AuthStore } from '../../../../auth/application/auth.store'
 import { EnrollmentsStore } from '../../../../enrollments/application/enrollments.store'
 import { ProgressStore } from '../../../../progress/application/progress.store'
 import { CourseVideo } from '../../../domain/course-video.model'
+import { FavoriteButton } from '../../../../favorites/ui/components/favorite-button/favorite-button'
 
 @Component({
   selector: 'app-course-detail',
@@ -42,7 +42,6 @@ import { CourseVideo } from '../../../domain/course-video.model'
     LucideClock,
     LucidePlay,
     LucideCirclePlay,
-    LucideBookmark,
     LucideArrowLeft,
     EmptyState,
     RouterLink,
@@ -56,6 +55,7 @@ import { CourseVideo } from '../../../domain/course-video.model'
     Button,
     LucideCircleAlert,
     LucideCircleCheck,
+    FavoriteButton,
   ],
   templateUrl: './course-detail.page.html',
 })
@@ -180,9 +180,9 @@ export class CourseDetailPage {
     if (first) this.play(first)
   }
 
-  protected markComplete(videoId: number): void{
+  protected markComplete(videoId: number): void {
     const eid = this.enrollmentId()
-    if (eid != null) this.progress.complete({enrollmentId: eid, videoId})
+    if (eid != null) this.progress.complete({ enrollmentId: eid, videoId })
   }
 
   protected addVideo(): void {
