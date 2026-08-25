@@ -35,6 +35,7 @@ import { EnrollmentsStore } from '../../../../enrollments/application/enrollment
 import { ProgressStore } from '../../../../progress/application/progress.store'
 import { CourseVideo } from '../../../domain/course-video.model'
 import { FavoriteButton } from '../../../../favorites/ui/components/favorite-button/favorite-button'
+import { DurationFormatPipe } from '../../../../../shared/pipes/duration-format.pipe'
 
 @Component({
   selector: 'app-course-detail',
@@ -56,6 +57,7 @@ import { FavoriteButton } from '../../../../favorites/ui/components/favorite-but
     LucideCircleAlert,
     LucideCircleCheck,
     FavoriteButton,
+    DurationFormatPipe,
   ],
   templateUrl: './course-detail.page.html',
 })

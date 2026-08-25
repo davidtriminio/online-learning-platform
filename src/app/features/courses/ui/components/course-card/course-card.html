@@ -32,8 +32,7 @@
       <div class="mt-auto flex items-center gap-4 border-t border-border pt-4">
         <span class="inline-flex items-center gap-1.5 text-sm text-text-secondary">
           <svg lucideClock [size]="16" [strokeWidth]="1.5" class="text-primary"></svg>
-          <span class="font-medium text-text-main">{{ course().totalHours }}</span>
-          <span>hrs</span>
+          <span class="font-medium text-text-main">{{ course().totalHours | durationFormat: 'hours' }}</span>
         </span>
 
         <span class="inline-flex items-center gap-1.5 text-sm text-text-secondary">

@@ -4,6 +4,7 @@ import { CardContainer } from '../../../../../shared/ui/card-container/card-cont
 import { LucideArrowRight, LucideCirclePlay, LucideClock } from '@lucide/angular'
 import { RouterLink } from '@angular/router'
 import { FavoriteButton } from '../../../../favorites/ui/components/favorite-button/favorite-button'
+import { DurationFormatPipe } from '../../../../../shared/pipes/duration-format.pipe'
 
 @Component({
   selector: 'app-course-card',
@@ -14,6 +15,7 @@ import { FavoriteButton } from '../../../../favorites/ui/components/favorite-but
     LucideArrowRight,
     RouterLink,
     FavoriteButton,
+    DurationFormatPipe,
   ],
   templateUrl: './course-card.html',
 })
