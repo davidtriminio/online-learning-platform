@@ -1,0 +1,23 @@
+<main class="mx-auto w-full max-w-7xl px-5 py-8 sm:px-8 lg:py-10">
+  <header class="mb-6 sm:mb-8">
+    <h1 class="text-2xl font-black tracking-tight text-text-main sm:text-3xl">Favorites</h1>
+    <p class="mt-1 text-sm text-text-secondary">Courses you saved.</p>
+  </header>
+
+  @if (courses.isLoading()) {
+    <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      @for (i of [1, 2, 3]; track i) {
+        <app-card-skeleton />
+      }
+    </div>
+  } @else if (favorites.favoriteCourses().length === 0) {
+    <app-empty-state
+      title="No favorites yet"
+      message="Tap the heart on any course to save it here."
+      actionLabel="Browse courses"
+      actionLink="/courses"
+      class="block" />
+  } @else {
+    <app-course-grid [courses]="favorites.favoriteCourses()" />
+  }
+</main>

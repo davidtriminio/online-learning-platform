@@ -27,4 +27,10 @@ export const routes: Routes = [
     loadChildren: () =>
       import('./features/enrollments/enrollments.routes').then((m) => m.enrollmentsRoutes),
   },
+  {
+    path: 'favorites',
+    canActivate: [authGuard],
+    loadChildren: () =>
+      import('./features/favorites/favorites.routes').then((m) => m.FavoritesRoutes)
+  }
 ]
