@@ -1,0 +1,16 @@
+<button
+  appButton
+  type="button"
+  (click)="toggle($event)"
+  [attr.aria-pressed]="isFavorite()"
+  [attr.aria-label]="isFavorite() ? 'Remove from favorites' : 'Add to favorites'"
+  class="inline-flex items-center justify-center gap-2 rounded-xl border border-border bg-surface px-4 py-3 text-sm font-semibold text-text-main shadow-sm transition-all duration-200 hover:bg-primary-light hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page"
+>
+  <svg
+    lucideHeart
+    [size]="18"
+    [strokeWidth]="2"
+    [class]="isFavorite() ? 'text-white' : 'current'"
+    [attr.fill]="isFavorite() ? '#c60000' : 'none'"
+  ></svg>
+</button>
