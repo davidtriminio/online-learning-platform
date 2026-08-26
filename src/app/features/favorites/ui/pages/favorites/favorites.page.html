@@ -5,11 +5,7 @@
   </header>
 
   @if (courses.isLoading()) {
-    <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-      @for (i of [1, 2, 3]; track i) {
-        <app-card-skeleton />
-      }
-    </div>
+    <app-skeleton-grid/>
   } @else if (favorites.favoriteCourses().length === 0) {
     <app-empty-state
       title="No favorites yet"

@@ -24,7 +24,7 @@ El proyecto está diseñado bajo una arquitectura *Feature-Sliced* y orientada a
 Secuencia exacta de desarrollo. Utiliza estos checkboxes para trazar el progreso y garantizar que las dependencias entre módulos se respeten.
 
 ### Fase 0: Setup Core
-- [x] `src/environments/environment.ts` (apiUrl prod).
+- [x] `src/environments/environment.ts` (apiUrl prod). ✅
 - [x] `src/environments/environment.development.ts` (apiUrl local).
 - [x] `src/app/core/errors/infrastructure/http/api-error-handler.service.ts` (Capa de normalización de errores).
 - [x] `src/app/app.routes.ts` (Estructura base de enrutamiento).
@@ -32,34 +32,34 @@ Secuencia exacta de desarrollo. Utiliza estos checkboxes para trazar el progreso
 - [x] `src/app/app.config.ts` (`provideRouter`, `provideHttpClient`).
 - [x] `src/main.ts` (`bootstrapApplication`).
 
-### Fase 1: Autenticación y Usuarios (Identity)
-- [ ] `features/users/models/user.model.ts` (Interfaces core).
-- [ ] `features/auth/interfaces/login-request.ts` & `login-response.ts`.
-- [ ] `core/auth/token-storage.service.ts` (Persistencia segura).
-- [ ] `core/auth/auth.service.ts` (HTTP abstraction).
-- [ ] `core/auth/auth.store.ts` (`signalStore` global de sesión).
-- [ ] `interceptors/auth.interceptor.ts` (Inyección funcional de JWT).
-- [ ] Registro de interceptor en `app.config.ts`.
-- [ ] `guards/auth.guard.ts` (Protección funcional de rutas).
-- [ ] `features/auth/pages/login/login.component.ts` & `.html`.
-- [ ] Lazy loading de rutas de Auth y Usuarios.
-- [ ] Unit tests mockeados (`auth.mock.ts`, `login.component.spec.ts`).
+### Fase 1: Autenticación y Usuarios (Identity) ✅
+- [x] `features/users/models/user.model.ts` (Interfaces core).
+- [x] `features/auth/interfaces/login-request.ts` & `login-response.ts`.
+- [x] `core/auth/token-storage.service.ts` (Persistencia segura).
+- [x] `core/auth/auth.service.ts` (HTTP abstraction).
+- [x] `core/auth/auth.store.ts` (`signalStore` global de sesión).
+- [x] `interceptors/auth.interceptor.ts` (Inyección funcional de JWT).
+- [x] Registro de interceptor en `app.config.ts`.
+- [x] `guards/auth.guard.ts` (Protección funcional de rutas).
+- [x] `features/auth/pages/login/login.component.ts` & `.html`.
+- [x] Lazy loading de rutas de Auth y Usuarios.
+- [x] Unit tests mockeados (`auth.mock.ts`, `login.component.spec.ts`).
 
-### Fase 2: Catálogo de Cursos (CRUD Base)
-- [ ] Interfaces y Servicios Core (`course.model.ts`, `course.service.ts`).
-- [ ] `features/courses/store/courses.store.ts` (Estado global del catálogo).
-- [ ] `pages/course-list/course-list.component.ts` (`@for` iterando sobre el store).
-- [ ] `pages/course-detail/course-detail.component.ts` (Router Input `id = input<string>()`).
-- [ ] `pages/course-form/course-form.component.ts` (Reactive Form tipado).
-- [ ] `shared/components/card-container/` (Uso de `ng-content` avanzado).
-- [ ] Rutas protegidas del feature de cursos.
+### Fase 2: Catálogo de Cursos (CRUD Base) ✅
+- [x] Interfaces y Servicios Core (`course.model.ts`, `course.service.ts`).
+- [x] `features/courses/store/courses.store.ts` (Estado global del catálogo).
+- [x] `pages/course-list/course-list.component.ts` (`@for` iterando sobre el store).
+- [x] `pages/course-detail/course-detail.component.ts` (Router Input `id = input<string>()`).
+- [x] `pages/course-form/course-form.component.ts` (Reactive Form tipado).
+- [x] `shared/components/card-container/` (Uso de `ng-content` avanzado).
+- [x] Rutas protegidas del feature de cursos.
 
-### Fase 3: Motor de Reproducción y Relaciones
-- [ ] Entidades de Video (`video.model.ts`, `video.service.ts`).
-- [ ] Entidad Pivot (`course-video.model.ts`, `course-video.service.ts`).
-- [ ] `features/videos/components/video-player/` (`viewChild`, eventos de `<video>`).
-- [ ] Extensión del `course-form.component.ts` para soportar `FormArray` dinámico.
-- [ ] Integración del player y la lista de videos en el detalle del curso.
+### Fase 3: Motor de Reproducción y Relaciones ✅
+- [x] Entidades de Video (`video.model.ts`, `video.service.ts`).
+- [x] Entidad Pivot (`course-video.model.ts`, `course-video.service.ts`).
+- [x] `features/videos/components/video-player/` (`viewChild`, eventos de `<video>`).
+- [x] Extensión del `course-form.component.ts` para soportar `FormArray` dinámico.
+- [x] Integración del player y la lista de videos en el detalle del curso.
 
 ### Fase 4: Inscripciones (Enrollments) ✅
 - [x] `features/enrollments/domain/enrollment.model.ts` (entidad flaca + `EnrollmentInput`).
@@ -95,10 +95,12 @@ Secuencia exacta de desarrollo. Utiliza estos checkboxes para trazar el progreso
 - [x] `courses/ui/components/course-grid` (presentacional puro `input courses: Course[]` → `@for` de `course-card`); refactor de `course-list` para consumirlo (loading/error/empty se quedan en la página, que sí conoce el contexto).
 - [x] `favorites/ui/pages/favorites` + ruta lazy `/favorites` (protegida por `authGuard`); guardia `isLoading` del catálogo evita falso-vacío mientras `entityMap()` carga.
 
-### Fase 8: UI/UX Core
-- [ ] Componentes de feedback: `spinner/`, `empty-state/`.
-- [ ] Formateadores (Standalone Pipes): `duration-format`, `truncate`.
-- [ ] Comportamientos (Standalone Directives): `highlight`.
+### Fase 8: UI/UX Core ✅
+- [x] Pipes standalone puros: `shared/pipes/duration-format.pipe.ts` (segundos/horas → `"1h 5m"`; passthrough tolerante si el string ya viene formateado) y `shared/pipes/truncate.pipe.ts` (corte por palabra + ellipsis). Con specs Vitest.
+- [x] Directiva standalone `shared/directives/highlight.directive.ts` (resalta el término del buscador con `<mark>`; **escapa el HTML a mano** porque escribe `innerHTML` y bypasea el sanitizer; genérica: recibe `text`+`term`, no inyecta el store). Con spec.
+- [x] Threading del término sin acoplar presentacionales: `course-list → course-grid → course-card` pasan `highlight` como `input` (en `/favorites` va vacío → sin marcas). El highlight es case-insensitive (acento-sensible, para no romper índices con NFD).
+- [x] Consolidación de feedback: fix de `shared/ui/empty-state` (se coló `import { describe } from 'vitest'` en producción) + `shared/ui/skeleton-grid` (encapsula el `@for` de skeletons triplicado en `course-list`/`favorites`/`my-courses`). `spinner` no se creó: `loading-overlay` + `card-skeleton` ya cubrían el caso.
+- [x] Theming: fix de `infrastructure/theme/theme.service.ts` (media query inválida `matchMedia('prefers-color-scheme')` → `'(prefers-color-scheme: dark)'` con `?.` para degradar en jsdom/SSR; import muerto `Service` eliminado) + modo `system` (computed `isDark` sobre `theme`+`systemDark`, listener de `change`). `shared/ui/theme-toggle` (cicla light→dark→system). Toggle montado **temporal** en `app.html` (su hogar definitivo será el nav, en otra rama).
 
 ### Fase 9: Calidad y Testing
 - [ ] Configuración de `HttpTestingController` para servicios core.

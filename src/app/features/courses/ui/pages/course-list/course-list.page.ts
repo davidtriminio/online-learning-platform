@@ -10,17 +10,18 @@ import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop'
 import { debounceTime, distinctUntilChanged, skip } from 'rxjs'
 import { CourseFilterBar } from '../../components/course-filter-bar/course-filter-bar'
 import { CourseGrid } from '../../components/course-grid/course-grid'
+import { SkeletonGrid } from '../../../../../shared/ui/skeleton-grid/skeleton-grid'
 
 @Component({
   selector: 'app-course-list',
   imports: [
     RouterLink,
-    CardSkeleton,
     ErrorState,
     EmptyState,
     LucidePlus,
     CourseFilterBar,
     CourseGrid,
+    SkeletonGrid,
   ],
   templateUrl: './course-list.page.html',
 })

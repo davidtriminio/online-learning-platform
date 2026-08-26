@@ -20,18 +20,14 @@
 
 
   @if (store.status() === 'loading') {
-    <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-      @for (i of [1, 2, 3, 4, 5, 6]; track i) {
-        <app-card-skeleton />
-      }
-    </div>
+    <app-skeleton-grid />
   } @else if (store.status() === 'error') {
     <app-error-state class="block" />
   } @else if (store.filteredCourses().length === 0) {
     @if (store.hasSearch()) {
       <app-empty-state
         title="No matches"
-        message="No courses martch your search."
+        message="No courses match your search."
         class="block" />
     } @else {
       <app-empty-state
@@ -42,6 +38,6 @@
         class="block" />
     }
   } @else {
-    <app-course-grid [courses]="store.filteredCourses()" />
+    <app-course-grid [courses]="store.filteredCourses()" [highlight]="store.searchTerm()" />
   }
 </main>

@@ -125,7 +125,7 @@
             </span>
             <div>
               <dt class="text-xs text-text-secondary">Duration</dt>
-              <dd class="text-base font-bold text-text-main">{{ c.totalHours }} hrs</dd>
+              <dd class="text-base font-bold text-text-main">{{ c.totalHours | durationFormat: 'hours' }}</dd>
             </div>
           </div>
 
