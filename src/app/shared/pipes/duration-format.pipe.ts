@@ -15,7 +15,7 @@ export class DurationFormatPipe implements PipeTransform {
 
     const totalSeconds = unit === 'hours' ? Math.round(n * 3600) : Math.round(n)
     const h = Math.floor(totalSeconds / 3600)
-    const m = Math.floor(totalSeconds % 3600) / 60
+    const m = Math.floor((totalSeconds % 3600) / 60)
     const s = totalSeconds % 60
 
     const parts: String[] = []
