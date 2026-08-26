@@ -3,6 +3,7 @@ import { AuthStore } from '../../features/auth/application/auth.store'
 import { ThemeToggle } from '../../shared/ui/theme-toggle/theme-toggle'
 import { LucideBookOpen, LucideGraduationCap, LucideHeart, LucideLogOut, LucideMenu, LucideVideo } from '@lucide/angular'
 import { RouterLink, RouterLinkActive } from '@angular/router'
+import { Button } from '../../shared/ui/button/button/button'
 
 @Component({
   selector: 'app-navbar',
@@ -16,6 +17,7 @@ import { RouterLink, RouterLinkActive } from '@angular/router'
     LucideMenu,
     RouterLink,
     RouterLinkActive,
+    Button,
   ],
   templateUrl: './navbar.html',
 })
