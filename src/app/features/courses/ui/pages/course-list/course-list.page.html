@@ -42,6 +42,6 @@
         class="block" />
     }
   } @else {
-    <app-course-grid [courses]="store.filteredCourses()" />
+    <app-course-grid [courses]="store.filteredCourses()" [highlight]="store.searchTerm()"/>
   }
 </main>

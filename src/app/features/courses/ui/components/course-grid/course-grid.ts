@@ -9,4 +9,5 @@ import { CourseCard } from '../course-card/course-card'
 })
 export class CourseGrid {
   readonly courses = input.required<Course[]>()
+  readonly highlight = input('')
 }

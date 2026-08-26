@@ -5,6 +5,7 @@ import { LucideArrowRight, LucideCirclePlay, LucideClock } from '@lucide/angular
 import { RouterLink } from '@angular/router'
 import { FavoriteButton } from '../../../../favorites/ui/components/favorite-button/favorite-button'
 import { DurationFormatPipe } from '../../../../../shared/pipes/duration-format.pipe'
+import { HighlightDirective } from '../../../../../shared/directives/highlight.directive'
 
 @Component({
   selector: 'app-course-card',
@@ -16,9 +17,11 @@ import { DurationFormatPipe } from '../../../../../shared/pipes/duration-format.
     RouterLink,
     FavoriteButton,
     DurationFormatPipe,
+    HighlightDirective,
   ],
   templateUrl: './course-card.html',
 })
 export class CourseCard {
   readonly course = input.required<Course>()
+  readonly highlight = input('')
 }

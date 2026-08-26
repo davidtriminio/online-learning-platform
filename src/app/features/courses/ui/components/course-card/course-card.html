@@ -20,11 +20,11 @@
 
     <!-- Body -->
     <div class="flex flex-1 flex-col gap-2 p-5">
-      <h3 class="line-clamp-2 text-base font-bold leading-snug text-text-main">
+      <h3 class="line-clamp-2 text-base font-bold leading-snug text-text-main" [appHighlight]="course().name" [appHighlightTerm]="highlight()">
         {{ course().name }}
       </h3>
 
-      <p class="line-clamp-2 text-sm leading-relaxed text-text-secondary">
+      <p class="line-clamp-2 text-sm leading-relaxed text-text-secondary" [appHighlight]="course().name" [appHighlightTerm]="highlight()">
         {{ course().description }}
       </p>
 
