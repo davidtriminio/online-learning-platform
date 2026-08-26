@@ -95,10 +95,12 @@ Secuencia exacta de desarrollo. Utiliza estos checkboxes para trazar el progreso
 - [x] `courses/ui/components/course-grid` (presentacional puro `input courses: Course[]` → `@for` de `course-card`); refactor de `course-list` para consumirlo (loading/error/empty se quedan en la página, que sí conoce el contexto).
 - [x] `favorites/ui/pages/favorites` + ruta lazy `/favorites` (protegida por `authGuard`); guardia `isLoading` del catálogo evita falso-vacío mientras `entityMap()` carga.
 
-### Fase 8: UI/UX Core
-- [ ] Componentes de feedback: `spinner/`, `empty-state/`.
-- [ ] Formateadores (Standalone Pipes): `duration-format`, `truncate`.
-- [ ] Comportamientos (Standalone Directives): `highlight`.
+### Fase 8: UI/UX Core ✅
+- [x] Pipes standalone puros: `shared/pipes/duration-format.pipe.ts` (segundos/horas → `"1h 5m"`; passthrough tolerante si el string ya viene formateado) y `shared/pipes/truncate.pipe.ts` (corte por palabra + ellipsis). Con specs Vitest.
+- [x] Directiva standalone `shared/directives/highlight.directive.ts` (resalta el término del buscador con `<mark>`; **escapa el HTML a mano** porque escribe `innerHTML` y bypasea el sanitizer; genérica: recibe `text`+`term`, no inyecta el store). Con spec.
+- [x] Threading del término sin acoplar presentacionales: `course-list → course-grid → course-card` pasan `highlight` como `input` (en `/favorites` va vacío → sin marcas). El highlight es case-insensitive (acento-sensible, para no romper índices con NFD).
+- [x] Consolidación de feedback: fix de `shared/ui/empty-state` (se coló `import { describe } from 'vitest'` en producción) + `shared/ui/skeleton-grid` (encapsula el `@for` de skeletons triplicado en `course-list`/`favorites`/`my-courses`). `spinner` no se creó: `loading-overlay` + `card-skeleton` ya cubrían el caso.
+- [x] Theming: fix de `infrastructure/theme/theme.service.ts` (media query inválida `matchMedia('prefers-color-scheme')` → `'(prefers-color-scheme: dark)'` con `?.` para degradar en jsdom/SSR; import muerto `Service` eliminado) + modo `system` (computed `isDark` sobre `theme`+`systemDark`, listener de `change`). `shared/ui/theme-toggle` (cicla light→dark→system). Toggle montado **temporal** en `app.html` (su hogar definitivo será el nav, en otra rama).
 
 ### Fase 9: Calidad y Testing
 - [ ] Configuración de `HttpTestingController` para servicios core.
