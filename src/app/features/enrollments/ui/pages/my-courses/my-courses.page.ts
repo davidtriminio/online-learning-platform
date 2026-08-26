@@ -8,6 +8,8 @@ import { ConfirmDialog } from '../../../../../shared/ui/confirm-dialog/confirm-d
 import { LucideArrowRight, LucideCalendar, LucideCircleCheck, LucideTrash2 } from '@lucide/angular'
 import { CardSkeleton } from '../../../../../shared/ui/card-skeleton/card-skeleton'
 import { ErrorState } from '../../../../../shared/ui/error-state/error-state'
+import { SkeletonGrid } from '../../../../../shared/ui/skeleton-grid/skeleton-grid'
+import { Button } from '../../../../../shared/ui/button/button/button'
 
 @Component({
   selector: 'app-my-courses',
@@ -18,10 +20,11 @@ import { ErrorState } from '../../../../../shared/ui/error-state/error-state'
     ConfirmDialog,
     LucideCalendar,
     LucideCircleCheck,
-    CardSkeleton,
     ErrorState,
     LucideArrowRight,
     LucideTrash2,
+    SkeletonGrid,
+    Button,
   ],
   templateUrl: './my-courses.page.html',
 })

@@ -13,5 +13,4 @@ export class EmptyState {
   readonly message = input('there is nothing here right now.')
   readonly actionLabel = input<string>()
   readonly actionLink = input<string | unknown[]>()
-  protected readonly describe = describe
 }

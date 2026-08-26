@@ -5,11 +5,7 @@
   </header>
 
   @if (isLoading()) {
-    <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-      @for (i of [1, 2, 3]; track i) {
-        <app-card-skeleton />
-      }
-    </div>
+    <app-skeleton-grid/>
   } @else if (hasError()) {
     <app-error-state class="block" />
   } @else if (myCourses().length === 0) {
@@ -83,6 +79,7 @@
 
               <button
                 type="button"
+                appButton
                 (click)="openConfirm(item.enrollment.id)"
                 class="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl border border-border bg-surface px-4 py-2.5 text-sm font-semibold text-danger transition-all duration-200 hover:border-danger/40 hover:bg-danger/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-danger/40 focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page"
               >
