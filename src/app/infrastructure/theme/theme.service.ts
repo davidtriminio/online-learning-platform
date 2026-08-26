@@ -6,7 +6,7 @@ const STORAGE_KEY = 'app-theme'
 @Injectable({ providedIn: 'root' })
 export class ThemeService {
   private doc = inject(DOCUMENT)
-  private media = this.doc.defaultView?.matchMedia('(prefers-color-scheme: dark)')
+  private media = this.doc.defaultView?.matchMedia?.('(prefers-color-scheme: dark)')
 
   readonly theme = signal<Theme>(this.getInitialTheme())
   private readonly systemDark = signal(this.media?.matches ?? false)
