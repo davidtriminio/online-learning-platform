@@ -1,0 +1,36 @@
+@if (totalPages() > 1) {
+  <nav
+    aria-label="Pagination"
+    class="mt-8 flex items-center justify-center gap-2"
+  >
+    <button
+      type="button"
+      appButton
+      (click)="prev()"
+      [disabled]="!canPrev()"
+      aria-label="Previous page"
+      class="grid h-10 w-10 place-items-center rounded-xl border border-border bg-surface text-text-secondary shadow-sm transition-colors duration-200 hover:bg-primary-light hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-surface disabled:hover:text-text-secondary"
+    >
+      <svg lucideChevronLeft [size]="18" [strokeWidth]="2"></svg>
+    </button>
+
+    <span
+      class="min-w-[7.5rem] rounded-xl border border-border bg-surface px-4 py-2 text-center text-sm text-text-secondary shadow-sm tabular-nums"
+      aria-live="polite"
+    >
+      Page <span class="font-bold text-text-main">{{ currentPage() }}</span>
+      of <span class="font-bold text-text-main">{{ totalPages() }}</span>
+    </span>
+
+    <button
+      type="button"
+      appButton
+      (click)="next()"
+      [disabled]="!canNext()"
+      aria-label="Next page"
+      class="grid h-10 w-10 place-items-center rounded-xl border border-border bg-surface text-text-secondary shadow-sm transition-colors duration-200 hover:bg-primary-light hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-surface disabled:hover:text-text-secondary"
+    >
+      <svg lucideChevronRight [size]="18" [strokeWidth]="2"></svg>
+    </button>
+  </nav>
+}
