@@ -11,6 +11,7 @@ import {
   LucideImageDown,
   LucideLink,
 } from '@lucide/angular'
+import { BackDirective } from '../../../../../shared/directives/back.directive'
 
 @Component({
   selector: 'app-video-form',
@@ -22,6 +23,7 @@ import {
     LucideCheck,
     LucideImageDown,
     LucideClock12,
+    BackDirective,
   ],
   templateUrl: './video-form.page.html',
 })

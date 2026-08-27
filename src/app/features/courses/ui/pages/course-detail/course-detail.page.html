@@ -5,13 +5,14 @@
 } @else if (course(); as c) {
   <main class="mx-auto w-full max-w-7xl px-5 py-8 sm:px-8 lg:py-10">
     <nav class="mb-6 flex flex-wrap items-center justify-between gap-3">
-      <a
-        routerLink="/courses"
+      <button
+        appBack
+        type="button"
         class="inline-flex items-center gap-1.5 text-sm font-semibold text-text-secondary transition-colors hover:text-primary focus-visible:outline-none focus-visible:underline"
       >
         <svg lucideArrowLeft [size]="18" [strokeWidth]="2"></svg>
         <span>Back to courses</span>
-      </a>
+      </button>
 
       <div class="flex items-center gap-2">
         <a
