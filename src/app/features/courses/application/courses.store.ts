@@ -19,11 +19,16 @@ const normalize = (s: string) =>
     .normalize('NFD')
     .replace(/[\u0300-\u036f]/g, '')
 
-type CoursesState = { status: 'idle' | 'loading' | 'error'; searchTerm: string }
+type CoursesState = {
+  status: 'idle' | 'loading' | 'error'
+  searchTerm: string
+  page: number
+  pageSize: number
+}
 
 export const CoursesStore = signalStore(
   { providedIn: 'root' },
-  withState<CoursesState>({ status: 'idle', searchTerm: '' }),
+  withState<CoursesState>({ status: 'idle', searchTerm: '', page: 1, pageSize: 9 }),
   withEntities<Course>(),
   withComputed(({ entities, status, searchTerm }) => ({
     courses: computed(() => entities()),
@@ -34,10 +39,21 @@ export const CoursesStore = signalStore(
       const term = normalize(searchTerm().trim())
       if (!term) return entities()
       return entities().filter(
-        (c) => normalize(c.name).includes(term) || normalize(c.description).includes(term)
+        (c) => normalize(c.name).includes(term) || normalize(c.description).includes(term),
       )
     }),
-    hasSearch: computed(() => searchTerm().trim().length > 0)
+    hasSearch: computed(() => searchTerm().trim().length > 0),
+  })),
+  withComputed(({ filteredCourses, pageSize }) => ({
+    totalPages: computed(() => Math.min(Math.ceil(filteredCourses().length / pageSize()))),
+  })),
+  withComputed(({ filteredCourses, page, pageSize, totalPages }) => ({
+    currentPage: computed(() => Math.max(Math.max(1, page()), totalPages())),
+    pagedCourses: computed(() => {
+      const size = pageSize()
+      const p = Math.min(Math.max(1, page()), totalPages())
+      return filteredCourses().slice((p - 1) * size, p * size)
+    }),
   })),
   withMethods((store, repo = inject(CourseRepository)) => {
     const refresh = rxMethod<void>(
@@ -113,9 +129,12 @@ export const CoursesStore = signalStore(
           ),
         ),
       ),
-      setSearchTerm(term: string){
-        patchState(store, {searchTerm: term})
-      }
+      setSearchTerm(term: string) {
+        patchState(store, { searchTerm: term })
+      },
+      setPage(n: number) {
+        patchState(store, { page: n })
+      },
     }
   }),
   withHooks({

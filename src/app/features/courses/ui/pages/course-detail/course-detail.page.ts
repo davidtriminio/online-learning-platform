@@ -36,6 +36,7 @@ import { ProgressStore } from '../../../../progress/application/progress.store'
 import { CourseVideo } from '../../../domain/course-video.model'
 import { FavoriteButton } from '../../../../favorites/ui/components/favorite-button/favorite-button'
 import { DurationFormatPipe } from '../../../../../shared/pipes/duration-format.pipe'
+import { BackDirective } from '../../../../../shared/directives/back.directive'
 
 @Component({
   selector: 'app-course-detail',
@@ -58,6 +59,7 @@ import { DurationFormatPipe } from '../../../../../shared/pipes/duration-format.
     LucideCircleCheck,
     FavoriteButton,
     DurationFormatPipe,
+    BackDirective,
   ],
   templateUrl: './course-detail.page.html',
 })

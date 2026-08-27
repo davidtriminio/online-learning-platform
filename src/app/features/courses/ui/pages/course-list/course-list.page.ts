@@ -1,8 +1,6 @@
 import { Component, effect, inject, input } from '@angular/core'
 import { CoursesStore } from '../../../application/courses.store'
 import { Router, RouterLink } from '@angular/router'
-import { CourseCard } from '../../components/course-card/course-card'
-import { CardSkeleton } from '../../../../../shared/ui/card-skeleton/card-skeleton'
 import { ErrorState } from '../../../../../shared/ui/error-state/error-state'
 import { EmptyState } from '../../../../../shared/ui/empty-state/empty-state'
 import { LucidePlus } from '@lucide/angular'
@@ -11,6 +9,7 @@ import { debounceTime, distinctUntilChanged, skip } from 'rxjs'
 import { CourseFilterBar } from '../../components/course-filter-bar/course-filter-bar'
 import { CourseGrid } from '../../components/course-grid/course-grid'
 import { SkeletonGrid } from '../../../../../shared/ui/skeleton-grid/skeleton-grid'
+import { Paginator } from '../../../../../shared/ui/paginator/paginator'
 
 @Component({
   selector: 'app-course-list',
@@ -22,6 +21,7 @@ import { SkeletonGrid } from '../../../../../shared/ui/skeleton-grid/skeleton-gr
     CourseFilterBar,
     CourseGrid,
     SkeletonGrid,
+    Paginator,
   ],
   templateUrl: './course-list.page.html',
 })

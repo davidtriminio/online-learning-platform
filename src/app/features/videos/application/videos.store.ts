@@ -19,16 +19,31 @@ import { VideoRepository } from '../infrastructure/video.repository'
 import { rxMethod } from '@ngrx/signals/rxjs-interop'
 import { catchError, EMPTY, pipe, switchMap, tap } from 'rxjs'
 
-type VideoState = { status: 'idle' | 'loading' | 'error' }
+type VideoState = {
+  status: 'idle' | 'loading' | 'error'
+  page: number
+  pageSize: number
+}
 
 export const VideosStore = signalStore(
   { providedIn: 'root' },
-  withState<VideoState>({ status: 'idle' }),
+  withState<VideoState>({ status: 'idle', page: 1, pageSize: 9 }),
   withEntities<Video>(),
   withComputed(({ entities, status }) => ({
     videos: computed(() => entities()),
     total: computed(() => entities().length),
     isLoading: computed(() => status() === 'loading'),
+  })),
+  withComputed(({ total, pageSize }) => ({
+    totalPages: computed(() => Math.max(1, Math.ceil(total() / pageSize()))),
+  })),
+  withComputed(({ entities, page, pageSize, totalPages }) => ({
+    currentPage: computed(() => Math.min(Math.max(1, page()), totalPages())),
+    pagedVideos: computed(() => {
+      const size = pageSize()
+      const p = Math.min(Math.max(1, page()), totalPages())
+      return entities().slice((p - 1) * size, p * size)
+    }),
   })),
   withMethods((store, repo = inject(VideoRepository)) => ({
     loadAll: rxMethod<void>(
@@ -48,6 +63,9 @@ export const VideosStore = signalStore(
         ),
       ),
     ),
+    setPage(n: number) {
+      patchState(store, { page: n })
+    },
     addVideo: rxMethod<VideoInput>(
       pipe(
         tap(() => patchState(store, { status: 'loading' })),
