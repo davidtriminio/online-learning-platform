@@ -63,7 +63,7 @@ export class VideoFormPage {
       }
     })
     effect(() => {
-      if (!this.submitting) return
+      if (!this.submitting()) return
       const status = this.store.status()
       if (status === 'idle') {
         this.submitting.set(false)
