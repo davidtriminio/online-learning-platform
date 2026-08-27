@@ -5,7 +5,8 @@
     <!-- Brand -->
     <a
       routerLink="/courses"
-      class="flex shrink-0 items-center gap-2 font-black tracking-tight text-text-main transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 rounded-lg"
+      (click)="closeMenu()"
+      class="flex shrink-0 items-center gap-2 rounded-lg font-black tracking-tight text-text-main transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
     >
       <span class="grid h-9 w-9 place-items-center rounded-xl bg-primary text-white shadow-sm">
         <svg lucideGraduationCap [size]="20" [strokeWidth]="2"></svg>
@@ -13,128 +14,114 @@
       <span class="hidden sm:inline">Learning Platform</span>
     </a>
 
-    <!-- Primary links (desktop) -->
-    <ul class="ml-2 hidden items-center gap-1 lg:flex">
-      <li>
-        <a
-          routerLink="/courses"
-          routerLinkActive="bg-primary-light text-primary"
-          class="inline-flex items-center gap-2 rounded-xl px-3.5 py-2 text-sm font-semibold text-text-secondary transition-colors hover:bg-primary-light hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
-        >
-          <svg lucideBookOpen [size]="18" [strokeWidth]="2"></svg><span>Courses</span>
-        </a>
-      </li>
-      <li>
-        <a
-          routerLink="/my-courses"
-          routerLinkActive="bg-primary-light text-primary"
-          class="inline-flex items-center gap-2 rounded-xl px-3.5 py-2 text-sm font-semibold text-text-secondary transition-colors hover:bg-primary-light hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
-        >
-          <svg lucideGraduationCap [size]="18" [strokeWidth]="2"></svg><span>My Courses</span>
-        </a>
-      </li>
-      <li>
-        <a
-          routerLink="/favorites"
-          routerLinkActive="bg-primary-light text-primary"
-          class="inline-flex items-center gap-2 rounded-xl px-3.5 py-2 text-sm font-semibold text-text-secondary transition-colors hover:bg-primary-light hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
-        >
-          <svg lucideHeart [size]="18" [strokeWidth]="2"></svg><span>Favorites</span>
-        </a>
-      </li>
-
-      @if (auth.isAdmin()) {
-        <li>
-          <a
-            routerLink="/videos"
-            routerLinkActive="bg-primary-light text-primary"
-            class="inline-flex items-center gap-2 rounded-xl px-3.5 py-2 text-sm font-semibold text-text-secondary transition-colors hover:bg-primary-light hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
-          >
-            <svg lucideVideo [size]="18" [strokeWidth]="2"></svg><span>Videos</span>
-          </a>
-        </li>
+    <!-- Hamburger (solo móvil) -->
+    <button
+      type="button"
+      (click)="toggleMenu()"
+      [attr.aria-expanded]="menuOpen()"
+      aria-label="Menu"
+      class="ml-auto grid h-10 w-10 place-items-center rounded-xl border border-border bg-surface text-text-secondary shadow-sm transition-colors hover:bg-primary-light hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 lg:hidden"
+    >
+      @if (menuOpen()) {
+        <svg lucideX [size]="20" [strokeWidth]="2"></svg>
+      } @else {
+        <svg lucideMenu [size]="20" [strokeWidth]="2"></svg>
       }
-    </ul>
+    </button>
 
-    <!-- Right side -->
-    <div class="ml-auto flex items-center gap-2 sm:gap-3">
-      <app-theme-toggle />
-
-      @if (auth.user(); as user) {
-        <div class="hidden items-center gap-2.5 sm:flex">
-          <span
-            class="grid h-9 w-9 place-items-center rounded-full bg-primary-light text-sm font-bold text-primary"
-            aria-hidden="true"
-          >
-            {{ user.fullName.charAt(0) }}
-          </span>
-          <span class="hidden max-w-[10rem] truncate text-sm font-semibold text-text-main md:inline">
-            {{ user.fullName }}
-          </span>
+    <!-- Panel colapsable (móvil) -->
+    @if (menuOpen()) {
+      <div
+        class="absolute left-0 right-0 top-full mt-px flex flex-col gap-4 border-b border-border bg-surface p-5 shadow-xl lg:hidden"
+      >
+        <ng-container [ngTemplateOutlet]="links" />
+        <div class="border-t border-border pt-4">
+          <ng-container [ngTemplateOutlet]="actions" />
         </div>
+      </div>
+    }
 
-        <button
-          appButton
-          type="button"
-          (click)="logout()"
-          aria-label="Log out"
-          class="grid h-10 w-10 place-items-center rounded-xl border border-border bg-surface text-text-secondary shadow-sm transition-colors hover:border-danger/40 hover:bg-danger/5 hover:text-danger focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-danger/40"
-        >
-          <svg lucideLogOut [size]="18" [strokeWidth]="2"></svg>
-        </button>
-      }
-
-      <!-- Mobile menu (native disclosure, no TS state) -->
-      <details class="relative lg:hidden [&_svg.chev]:open:rotate-180">
-        <summary
-          class="grid h-10 w-10 cursor-pointer list-none place-items-center rounded-xl border border-border bg-surface text-text-secondary shadow-sm transition-colors hover:bg-primary-light hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 [&::-webkit-details-marker]:hidden"
-          aria-label="Open menu"
-        >
-          <svg lucideMenu [size]="20" [strokeWidth]="2"></svg>
-        </summary>
-
-        <div
-          class="absolute right-0 mt-2 w-56 origin-top-right rounded-2xl border border-border bg-surface p-2 shadow-xl"
-        >
-          <a
-            routerLink="/courses"
-            routerLinkActive="bg-primary-light text-primary"
-            class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold text-text-secondary transition-colors hover:bg-primary-light hover:text-primary"
-          >
-            <svg lucideBookOpen [size]="18" [strokeWidth]="2"></svg><span>Courses</span>
-          </a>
-          <a
-            routerLink="/my-courses"
-            routerLinkActive="bg-primary-light text-primary"
-            class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold text-text-secondary transition-colors hover:bg-primary-light hover:text-primary"
-          >
-            <svg lucideGraduationCap [size]="18" [strokeWidth]="2"></svg><span>My Courses</span>
-          </a>
-          <a
-            routerLink="/favorites"
-            routerLinkActive="bg-primary-light text-primary"
-            class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold text-text-secondary transition-colors hover:bg-primary-light hover:text-primary"
-          >
-            <svg lucideHeart [size]="18" [strokeWidth]="2"></svg><span>Favorites</span>
-          </a>
-
-          @if (auth.isAdmin()) {
-            <a
-              routerLink="/videos"
-              routerLinkActive="bg-primary-light text-primary"
-              class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold text-text-secondary transition-colors hover:bg-primary-light hover:text-primary"
-            >
-              <svg lucideVideo [size]="18" [strokeWidth]="2"></svg><span>Videos</span>
-            </a>
-          }
-
-          @if (auth.user(); as user) {
-            <div class="mt-2 border-t border-border px-3 pt-3">
-              <p class="truncate text-sm font-semibold text-text-main">{{ user.fullName }}</p>
-            </div>
-          }
-        </div>
-      </details>
+    <!-- Barra (desktop) -->
+    <div class="ml-auto hidden items-center gap-6 lg:flex">
+      <ng-container [ngTemplateOutlet]="links" />
+      <ng-container [ngTemplateOutlet]="actions" />
     </div>
   </nav>
 </header>
+
+<ng-template #links>
+  <ul class="flex flex-col gap-1 lg:flex-row lg:items-center">
+    <li>
+      <a
+        routerLink="/courses"
+        routerLinkActive="bg-primary-light text-primary"
+        (click)="closeMenu()"
+        class="flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-sm font-semibold text-text-secondary transition-colors hover:bg-primary-light hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 lg:py-2"
+      >
+        <svg lucideBookOpen [size]="18" [strokeWidth]="2"></svg><span>Courses</span>
+      </a>
+    </li>
+    <li>
+      <a
+        routerLink="/my-courses"
+        routerLinkActive="bg-primary-light text-primary"
+        (click)="closeMenu()"
+        class="flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-sm font-semibold text-text-secondary transition-colors hover:bg-primary-light hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 lg:py-2"
+      >
+        <svg lucideGraduationCap [size]="18" [strokeWidth]="2"></svg><span>My Courses</span>
+      </a>
+    </li>
+    <li>
+      <a
+        routerLink="/favorites"
+        routerLinkActive="bg-primary-light text-primary"
+        (click)="closeMenu()"
+        class="flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-sm font-semibold text-text-secondary transition-colors hover:bg-primary-light hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 lg:py-2"
+      >
+        <svg lucideHeart [size]="18" [strokeWidth]="2"></svg><span>Favorites</span>
+      </a>
+    </li>
+
+    @if (auth.isAdmin()) {
+      <li>
+        <a
+          routerLink="/videos"
+          routerLinkActive="bg-primary-light text-primary"
+          (click)="closeMenu()"
+          class="flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-sm font-semibold text-text-secondary transition-colors hover:bg-primary-light hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 lg:py-2"
+        >
+          <svg lucideVideo [size]="18" [strokeWidth]="2"></svg><span>Videos</span>
+        </a>
+      </li>
+    }
+  </ul>
+</ng-template>
+
+<ng-template #actions>
+  <div class="flex items-center gap-3 lg:gap-3">
+    <app-theme-toggle />
+
+    @if (auth.user(); as user) {
+      <div class="flex flex-1 items-center gap-2.5 lg:flex-none">
+        <span
+          class="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-primary-light text-sm font-bold text-primary"
+          aria-hidden="true"
+        >
+          {{ user.fullName.charAt(0) }}
+        </span>
+        <span class="truncate text-sm font-semibold text-text-main lg:max-w-[10rem]">
+          {{ user.fullName }}
+        </span>
+      </div>
+
+      <button
+        type="button"
+        (click)="logout()"
+        aria-label="Log out"
+        class="grid h-10 w-10 shrink-0 place-items-center rounded-xl border border-border bg-surface text-text-secondary shadow-sm transition-colors hover:border-danger/40 hover:bg-danger/5 hover:text-danger focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-danger/40"
+      >
+        <svg lucideLogOut [size]="18" [strokeWidth]="2"></svg>
+      </button>
+    }
+  </div>
+</ng-template>
