@@ -5,8 +5,7 @@ import { MainLayout } from './layout/main-layout/main-layout'
 export const routes: Routes = [
   {
     path: 'login',
-    loadChildren: () =>
-      import('./features/auth/auth.routes').then((m) => m.authRoutes),
+    loadChildren: () => import('./features/auth/auth.routes').then((m) => m.authRoutes),
   },
   {
     path: '',
@@ -20,8 +19,7 @@ export const routes: Routes = [
       },
       {
         path: 'videos',
-        loadChildren: () =>
-          import('./features/videos/videos.routes').then((m) => m.videosRoutes),
+        loadChildren: () => import('./features/videos/videos.routes').then((m) => m.videosRoutes),
       },
       {
         path: 'my-courses',
@@ -38,10 +36,11 @@ export const routes: Routes = [
         redirectTo: 'courses',
         pathMatch: 'full',
       },
+      {
+        path: '**',
+        loadComponent: () =>
+          import('./shared/ui/not-found/not-found.page').then((m) => m.NotFoundPage),
+      },
     ],
-  },
-  {
-    path: '**',
-    redirectTo: 'login',
   },
 ]
