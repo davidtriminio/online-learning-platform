@@ -5,6 +5,7 @@ import { ErrorState } from '../../../../../shared/ui/error-state/error-state'
 import { RouterLink } from '@angular/router'
 import { ConfirmDialog } from '../../../../../shared/ui/confirm-dialog/confirm-dialog'
 import { LucideClock, LucidePencil, LucidePlus, LucideTrash2 } from '@lucide/angular'
+import { Paginator } from '../../../../../shared/ui/paginator/paginator'
 
 @Component({
   selector: 'app-video-list',
@@ -17,6 +18,7 @@ import { LucideClock, LucidePencil, LucidePlus, LucideTrash2 } from '@lucide/ang
     LucidePencil,
     LucideTrash2,
     LucideClock,
+    Paginator,
   ],
   templateUrl: './video-list.page.html',
 })
