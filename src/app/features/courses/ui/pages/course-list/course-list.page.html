@@ -39,5 +39,9 @@
     }
   } @else {
     <app-course-grid [courses]="store.filteredCourses()" [highlight]="store.searchTerm()" />
+    <app-paginator
+      [currentPage]="store.currentPage()"
+      [totalPages]="store.totalPages()"
+      (pageChange)="store.setPage($event)" />
   }
 </main>
