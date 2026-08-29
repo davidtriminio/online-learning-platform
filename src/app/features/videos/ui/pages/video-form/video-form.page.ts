@@ -1,7 +1,7 @@
 import { Component, computed, effect, inject, input, numberAttribute, signal } from '@angular/core'
 import { Router } from '@angular/router'
 import { VideosStore } from '../../../application/videos.store'
-import { VideoForm, videoSchema } from '../../../application/videoSchema'
+import { VideoForm, videoSchema } from '../../../application/video.schema'
 import { form, FormField } from '@angular/forms/signals'
 import {
   LucideArrowLeft,
