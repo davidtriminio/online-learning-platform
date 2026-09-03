@@ -37,6 +37,7 @@ import { CourseVideo } from '../../../domain/course-video.model'
 import { FavoriteButton } from '../../../../favorites/ui/components/favorite-button/favorite-button'
 import { DurationFormatPipe } from '../../../../../shared/pipes/duration-format.pipe'
 import { BackDirective } from '../../../../../shared/directives/back.directive'
+import { CardSkeleton } from '../../../../../shared/ui/card-skeleton/card-skeleton'
 
 @Component({
   selector: 'app-course-detail',
@@ -60,6 +61,7 @@ import { BackDirective } from '../../../../../shared/directives/back.directive'
     FavoriteButton,
     DurationFormatPipe,
     BackDirective,
+    CardSkeleton,
   ],
   templateUrl: './course-detail.page.html',
 })

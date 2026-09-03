@@ -60,7 +60,13 @@
       <!-- Player / Thumbnail -->
       <figure class="overflow-hidden rounded-2xl border border-border bg-primary-light shadow-sm">
         @if (selectedVideoUrl(); as url) {
-          <app-video-player [src]="url" />
+          @defer (on viewport) {
+            <app-video-player [src]="url" />
+          } @placeholder {
+            <div class="aspect-video w-full">
+              <app-card-skeleton />
+            </div>
+          }
         } @else {
           <img
             [src]="c.thumbnailUrl"
