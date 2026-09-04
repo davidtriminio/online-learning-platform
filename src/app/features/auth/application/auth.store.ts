@@ -19,6 +19,7 @@ export class AuthStore {
   readonly user = this._user.asReadonly()
   readonly status = this._status.asReadonly()
   readonly isAuthenticated = computed(() => this._user() !== null)
+  readonly isAdmin = computed(() => this._user()?.role === 'Admin')
 
   constructor() {
     afterNextRender(() => this._user.set(this.session.getUser()))

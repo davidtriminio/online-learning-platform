@@ -4,6 +4,10 @@ import { MainLayout } from './layout/main-layout/main-layout'
 
 export const routes: Routes = [
   {
+    path: 'login',
+    loadChildren: () => import('./features/auth/auth.routes').then((m) => m.authRoutes),
+  },
+  {
     path: '',
     component: MainLayout,
     children: [
