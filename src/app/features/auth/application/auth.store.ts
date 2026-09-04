@@ -1,4 +1,4 @@
-import { computed, inject, Injectable, signal } from '@angular/core'
+import { afterNextRender, computed, inject, Injectable, signal } from '@angular/core'
 import { AuthRepository } from '../infrastructure/auth.repository'
 import { SessionStorageService } from '../infrastructure/session-storage.service'
 import { Router } from '@angular/router'
@@ -13,13 +13,17 @@ export class AuthStore {
   private session = inject(SessionStorageService)
   private router = inject(Router)
 
-  private _user = signal<AuthUser | null>(this.session.getUser())
+  private _user = signal<AuthUser | null>(null)
   private _status = signal<Status>('idle')
 
   readonly user = this._user.asReadonly()
   readonly status = this._status.asReadonly()
   readonly isAuthenticated = computed(() => this._user() !== null)
   readonly isAdmin = computed(() => this._user()?.role === 'Admin')
+
+  constructor() {
+    afterNextRender(() => this._user.set(this.session.getUser()))
+  }
 
   login(credentials: LoginRequestDto): void {
     this._status.set('loading')

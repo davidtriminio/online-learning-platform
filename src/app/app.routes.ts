@@ -10,7 +10,6 @@ export const routes: Routes = [
   {
     path: '',
     component: MainLayout,
-    canActivate: [authGuard],
     children: [
       {
         path: 'courses',
@@ -19,15 +18,18 @@ export const routes: Routes = [
       },
       {
         path: 'videos',
+        canActivate: [authGuard],
         loadChildren: () => import('./features/videos/videos.routes').then((m) => m.videosRoutes),
       },
       {
         path: 'my-courses',
+        canActivate: [authGuard],
         loadChildren: () =>
           import('./features/enrollments/enrollments.routes').then((m) => m.enrollmentsRoutes),
       },
       {
         path: 'favorites',
+        canActivate: [authGuard],
         loadChildren: () =>
           import('./features/favorites/favorites.routes').then((m) => m.FavoritesRoutes),
       },
