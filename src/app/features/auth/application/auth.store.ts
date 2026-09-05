@@ -4,6 +4,7 @@ import { SessionStorageService } from '../infrastructure/session-storage.service
 import { Router } from '@angular/router'
 import { AuthUser } from '../domain/auth-user.model'
 import { LoginRequestDto } from '../infrastructure/dto/login-request.dto'
+import { RegisterForm } from './register.schema'
 
 type Status = 'idle' | 'loading' | 'error'
 
@@ -35,6 +36,14 @@ export class AuthStore {
         this._status.set('idle')
         this.router.navigate(['/courses'])
       },
+      error: () => this._status.set('error'),
+    })
+  }
+
+  register(form: RegisterForm): void {
+    this._status.set('loading')
+    this.repo.register(form).subscribe({
+      next: () => this.login({ userName: form.userName, password: form.password }),
       error: () => this._status.set('error'),
     })
   }
