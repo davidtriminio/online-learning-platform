@@ -5,4 +5,5 @@
 export const environment = {
   production: true,
   apiUrl: 'https://projectapi.gerasim.in/api/OnlineLearning/',
+  demo: { userName: 'StudentHN', password: 'student' },
 }
