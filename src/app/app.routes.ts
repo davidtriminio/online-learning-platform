@@ -9,7 +9,12 @@ export const routes: Routes = [
   },
   {
     path: 'register',
-    loadComponent: () => import('./features/auth/ui/pages/register/register.page').then((m) => m.RegisterPage),
+    loadComponent: () =>
+      import('./features/auth/ui/pages/register/register.page').then((m) => m.RegisterPage),
+  },
+  {
+    path: 'demo',
+    loadComponent: () => import('./features/auth/ui/pages/demo/demo.page').then((m) => m.DemoPage),
   },
   {
     path: '',
