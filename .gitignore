@@ -94,3 +94,5 @@ screenshots/
 # ==========================================
 /libpeerconnection.log
 testem.log
+.vercel
+.env*
