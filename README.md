@@ -13,9 +13,9 @@ El proyecto está diseñado bajo una arquitectura *Feature-Sliced* y orientada a
 5. **Performance Extrema:** Estrategia `OnPush` global obligatoria en todos los componentes y vistas diferidas agresivas (`@defer`).
 6. **Zoneless & SSR:** Aplicación configurada para operar sin `Zone.js`, con Server-Side Rendering y renderizado a nivel de ruta (Server/Client modes).
 7. **Routing Funcional:** Uso de `CanActivateFn` para guards, `ResolveFn` para precarga de datos y `lazy loading` a nivel de rutas e hijos.
-8. **Formularios Dinámicos:** Reactive Forms fuertemente tipados (`FormGroup<T>`) con gestión avanzada de `FormArray` para colecciones de datos.
-9. **Intercepción HTTP:** Cadena funcional pura de interceptores (Auth, Error, Cache, Retry).
-10. **Testing Moderno:** Cobertura unitaria con `TestBed` (basado en componentes standalone) e integración E2E con **Playwright**.
+8. **Formularios Signal-first:** **Signal Forms nativos** (`@angular/forms/signals`: `form()`, `FormField`, schema con `required`/`email`/`minLength`). **NO** Reactive Forms, **NO** Zod.
+9. **Intercepción HTTP:** Cadena funcional pura de interceptores (Auth, Error, Loading) sobre `provideHttpClient(withInterceptors([...]))` (Fetch por defecto en v22).
+10. **Testing Moderno:** **Vitest 4** + jsdom — unit/integración con `HttpTestingController` (repos/interceptores) y `TestBed` (stores/schemas/guards/páginas). Playwright (E2E) **diferido, no instalado**.
 
 ---
 
@@ -102,17 +102,33 @@ Secuencia exacta de desarrollo. Utiliza estos checkboxes para trazar el progreso
 - [x] Consolidación de feedback: fix de `shared/ui/empty-state` (se coló `import { describe } from 'vitest'` en producción) + `shared/ui/skeleton-grid` (encapsula el `@for` de skeletons triplicado en `course-list`/`favorites`/`my-courses`). `spinner` no se creó: `loading-overlay` + `card-skeleton` ya cubrían el caso.
 - [x] Theming: fix de `infrastructure/theme/theme.service.ts` (media query inválida `matchMedia('prefers-color-scheme')` → `'(prefers-color-scheme: dark)'` con `?.` para degradar en jsdom/SSR; import muerto `Service` eliminado) + modo `system` (computed `isDark` sobre `theme`+`systemDark`, listener de `change`). `shared/ui/theme-toggle` (cicla light→dark→system). Toggle montado **temporal** en `app.html` (su hogar definitivo será el nav, en otra rama).
 
-### Fase 9: Calidad y Testing
-- [ ] Configuración de `HttpTestingController` para servicios core.
-- [ ] Configuración de `TestBed` en componentes list/detail.
-- [ ] Flujo E2E completo en Playwright (`enroll-course.spec.ts`).
+### Fase 9: Calidad y Testing ✅
+- [x] `testing/mocks/*.mock.ts` + helper `apiOk<T>` (fixtures con los shapes reales del backend, un solo lugar).
+- [x] Repositorios con `HttpTestingController` (course/enrollment/progress/video/course-video/auth): URL/param/método/body exactos, base derivada de `environment.apiUrl`, `httpMock.verify()`.
+- [x] Interceptores (error/auth/loading) montados con `provideHttpClient(withInterceptors([...]))`.
+- [x] `TestBed` en stores/schemas/guard/servicios/página de integración; stub de la frontera (`AuthStore`/`SessionStorage`) con `useValue`; `TestBed.tick()` para vaciar effects.
+- [x] Playwright (E2E) **documentado como scaffold diferido, NO instalado**.
 
-### Fase 10: Hardening Avanzado
-- [ ] Refactorización estricta a `ChangeDetectionStrategy.OnPush`.
-- [ ] Implementación de `@defer (on viewport)` para media pesada.
-- [ ] Habilitación de `provideExperimentalZonelessChangeDetection()`.
-- [ ] Configuración e hidratación de SSR (`provideClientHydration(withEventReplay())`).
-- [ ] Segmentación en `app.routes.server.ts` (SSR para catálogo, CSR para dashboard).
+### Fase 10: SSR + `@defer` (Vercel) ✅
+- [x] `@angular/ssr`: `provideServerRendering(withRoutes(serverRoutes))` + `provideClientHydration(withEventReplay(), withHttpTransferCacheOptions({...}))` (incremental hydration y Fetch ya son default en v22).
+- [x] `app.routes.server.ts` con `RenderMode` por ruta: catálogo/detalle `Server` (SSR+SEO), privadas `Client`, `login`/`register` `Prerender`.
+- [x] `authGuard` bajado del padre a las rutas privadas → catálogo público SSR-eable (patrón Udemy).
+- [x] Blindaje de APIs de navegador para SSR: `theme.service`/`session-storage`/`favorites-storage`/`back.directive` con `isPlatformBrowser`; sesión y tema hidratados en `afterNextRender` (mata el crash de `localStorage` en server y el `NG0500`).
+- [x] `TransferState` filtrado (excluye `?userid=`/`?enrollmentId=`); `@defer (on viewport)` en el reproductor (code-split) y `@defer (hydrate on viewport)` en el grid.
+
+### Fase 11: Registro de usuarios ✅
+- [x] `register-request.dto.ts` (write-thin) + `register.mapper.ts` (`userId:0` IDENTITY, `role`/`refreshToken` vacíos, `projectName:'LMS'`) + `AddNewUser` en endpoints.
+- [x] `register.schema.ts` (`required`/`email`/`minLength`), `auth.repository.register`, `auth.store.register` que **encadena** registro→login (la response no trae token usable).
+- [x] `register.page` + ruta pública `Prerender`. Límite del backend: email duplicado devuelve siempre 200 `result:true` (no detectable en front).
+
+### Fase 12: Modo Demo (fricción cero) ✅
+- [x] Credenciales demo en `environment` (visibles en el bundle; cuenta desechable, rol irrelevante porque el backend ignora permisos).
+- [x] Ruta `/demo` con auto-login en `afterNextRender` (SSR-safe) → `AuthStore.login(environment.demo)` → `/courses`; `RenderMode.Client`.
+- [x] Enlace del portafolio a `/demo` (login real, no token quemado; sin credenciales en la URL).
+
+### Deploy: Vercel (SSR Node) ✅
+- [x] El build SSR **no cabe** en el builder de 2 cores de Vercel (OOM/deadlock de esbuild) → **build en GitHub Actions** (`.github/workflows/deploy.yml`, `ubuntu-latest`) + `vercel deploy --prebuilt`.
+- [x] `NG_ALLOWED_HOSTS=*.vercel.app` (protección SSRF de v22), Ignored Build Step `exit 1` (corta el build nativo), `engines.node` pinneado.
 
 ---
 
@@ -128,5 +144,12 @@ pnpm start
 # 3. Ejecución de suite de tests unitarios
 pnpm run test
 
-# 4. Pruebas E2E (requiere levantar la app primero o configurar baseUrl en playwright.config.ts)
-pnpm run e2e
+# 4. SSR: build + servir el output de servidor en local
+#    (requiere NG_ALLOWED_HOSTS=localhost por la protección SSRF de v22)
+pnpm run build
+pnpm run serve:ssr:online-learning-platform
+```
+
+> **Deploy (Vercel SSR):** el build SSR no cabe en el builder de 2 cores de Vercel → se compila en **GitHub Actions** y se sube con `vercel deploy --prebuilt`. Ver `.github/workflows/deploy.yml` y el runbook en `guides/implementacion.html`.
+>
+> **E2E:** Playwright quedó **diferido, no instalado** — aún no hay `pnpm run e2e`.
