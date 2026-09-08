@@ -5,4 +5,5 @@
 export const environment = {
   production: false,
   apiUrl: '/api/OnlineLearning/',
+  demo: { userName: 'StudentHN', password: 'student' },
 }
